@@ -18,6 +18,6 @@ def Dbtest(request):
 def post_collection(request):
     if request.method == 'GET':
         posts = Userinfo.objects.all()
-        json_data = serializers.serialize('json', posts)
+        json_data = serializers.serialize('json', posts, fields=('username','password'))
         return HttpResponse(json_data, content_type="application/json")
 
