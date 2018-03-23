@@ -1,6 +1,6 @@
 from unittest import main as testmain, mock, TestCase
 
-from application import Application
+from .application import Application
 
 
 class TestApplicationMethods(TestCase):
