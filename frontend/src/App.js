@@ -1,20 +1,10 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import mylogo from './logo.png'
+
 import './App.css';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
-import MenuItem from 'material-ui/MenuItem';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import RaisedButton from 'material-ui/RaisedButton';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 
 import axios from 'axios'
-
-
+import Header from './components/Header.js'
+import TableExampleSimple from './components/ListDisplay.js'
 class App extends Component {
   state = {
     persons: []
@@ -30,28 +20,16 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <Header/>
+        <TableExampleSimple persons={this.state.persons}/>
 
-
-          <MuiThemeProvider>
-          <Toolbar>
-        <ToolbarGroup>
-            <img src={mylogo} height="35" width="80" />
-          <FontIcon className="muidocs-icon-custom-sort" />
-
-            </ToolbarGroup>
-              <ToolbarGroup>
-          <RaisedButton label="Login" primary={false} backgroundColor='red' labelColor='white'/>
-          <RaisedButton label="Register" primary={false} backgroundColor='orange' labelColor='white'/>
-        </ToolbarGroup>
-      </Toolbar>
-              </MuiThemeProvider>
-          <p className="App-intro">
-          List of users
-            {this.state.persons.map(person => <li>{person.fields.username}</li>)}
-        </p>
       </div>
     );
   }
 }
 
 export default App;
+
+// <p className="App-intro">
+//   {this.state.persons.map(person => <li>{person.fields.username}</li>)}
+// </p>
