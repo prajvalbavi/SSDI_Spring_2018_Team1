@@ -1,11 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {HomeButtons} from './pageButtons.js'
+import HomePageToolbar from "./ToolBar.js"
+
 import { withStyles } from 'material-ui/styles';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import mylogo from '../logo.png'
 
 const styles = {
   root: {
@@ -25,29 +22,12 @@ const styles = {
   }
 };
 
-function SimpleAppBar(props) {
-  const { classes } = props;
-  return (
-    <div className={classes.root}>
-      <AppBar position="static" color="default">
-        <Toolbar>
-          <Typography variant="title" color="inherit">
-            <img src={mylogo} height="35" width="100"  className={classes.logo}/>
-          </Typography>
-          <Button variant="raised" color="primary" className={classes.loginButton}>
-          Login
-          </Button>
-          <Button variant="raised" color="secondary" className={classes.registerButton}>
-          SignUp
-          </Button>
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+function header() {
+ return(
+    <HomePageToolbar>
+        <HomeButtons />
+    </HomePageToolbar>
+ );
 }
 
-SimpleAppBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(SimpleAppBar);
+export default withStyles(styles)(header)
