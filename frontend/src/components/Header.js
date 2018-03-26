@@ -1,11 +1,14 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
-import mylogo from '../logo.png'
+import mylogo from '../logo-new.png'
+import LoginButton from '../components/LoginButton.js'
+import WelcomeButton from '../components/WelcomeButton.js'
 
 const styles = {
   root: {
@@ -13,7 +16,7 @@ const styles = {
   },
   logo: {
     marginLeft: 30,
-    marginRight: 900,
+    marginRight: 850,
   },
   loginButton: {
     marginLeft: 0,
@@ -32,14 +35,11 @@ function SimpleAppBar(props) {
       <AppBar position="static" color="default">
         <Toolbar>
           <Typography variant="title" color="inherit">
-            <img src={mylogo} height="35" width="100"  className={classes.logo}/>
+            <Link to="/">
+            <img src={mylogo} height="50" width="150"  className={classes.logo}/>
+            </Link>
           </Typography>
-          <Button variant="raised" color="primary" className={classes.loginButton}>
-          Login
-          </Button>
-          <Button variant="raised" color="secondary" className={classes.registerButton}>
-          SignUp
-          </Button>
+          {props.pageName === 'welcome' ? <WelcomeButton/> : <LoginButton/>}
         </Toolbar>
       </AppBar>
     </div>
