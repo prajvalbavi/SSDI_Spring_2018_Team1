@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import validator from 'validator';
 import axios from 'axios';
-import Header from './Header.js'
+import HeaderSignup from './HeaderSignup.js'
 
 
 class Signup extends Component{
@@ -12,21 +12,49 @@ class Signup extends Component{
     emailError: undefined,
     passwordError: undefined,
     passwordMismatchError: undefined,
-    usernameError: undefined,
     responseUsernameError: undefined,
     responseEmailError: undefined
   }
 
+  handlePasswordError = (passwordValue) => {
+    var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+    return re.test(passwordValue);
+
+  }
+  handleCheckState = () => {
+    console.log('email',this.state.emailError);
+    console.log('password',this.state.passwordError);
+    console.log('passwordMismatchError',this.state.passwordMismatchError);
+    return (this.state.emailError && this.state.passwordError
+          && this.state.passwordMismatchError)
+  }
   handleSignUp = (e) => {
+    let finalCheck = true;
     e.preventDefault();
 
     const emailError = validator.isEmail(e.target.email.value.trim());
+    finalCheck = emailError;
     this.setState(() => {
       console.log("Enter the email again", !emailError);
       return { emailError: !emailError };
+
     });
 
+    if (!this.handlePasswordError(e.target.password.value.trim())){
+      finalCheck = false;
+      this.setState(() => {
+        console.log("Password Invalid", true);
+        return { passwordError: true };
+      })
+    } else {
+      this.setState(() => {
+        console.log("Password Invalid", false);
+        return { passwordError: false };
+      })
+    };
+
     if (e.target.password.value.trim() !== e.target.confirmPassword.value.trim()){
+      finalCheck = false;
       this.setState(() => {
         console.log("Password Mismatch", true);
         return { passwordMismatchError: true };
@@ -37,8 +65,10 @@ class Signup extends Component{
         console.log("Password Mismatch", false);
         return { passwordMismatchError: false };
       })
-    }
+    };
 
+    console.log("All state check", finalCheck);
+    if (finalCheck){
     const signupinfo = {
       username: e.target.username.value.trim(),
       password: e.target.password.value.trim(),
@@ -77,11 +107,12 @@ class Signup extends Component{
     .catch(function (response) {
         console.log(response);
     });
+  }
   };
   render(){
     return(
       <div>
-      <Header/>
+      <HeaderSignup/>
       <button size="large" className="big-button">Welcome to Beton</button>
       <form onSubmit={this.handleSignUp}>
         <div>
@@ -94,8 +125,10 @@ class Signup extends Component{
           <TextField required id="email" label="Email"/>}
         </div>
 
-        <div>
+        <div>{
+        this.state.passwordError ? <TextField required error helperText="Password format error" id="password" type="password" label="Password" margin="normal"/> :
         <TextField required id="password" type="password" label="Password" margin="normal"/>
+        }
         </div>
 
         <div>
