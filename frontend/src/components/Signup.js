@@ -8,23 +8,41 @@ import Header from './Header.js'
 
 
 class Signup extends Component{
+  state = {
+    emailError: undefined,
+    passwordError: undefined,
+    passwordMismatchError: undefined,
+    usernameError: undefined
+  }
+
   handleSignUp = (e) => {
     e.preventDefault();
-    console.log(e.target.username.value.trim());
 
-    const emailError = validator.isEmail(e.target.email.value.trim())
-    if (!emailError){
+    const emailError = validator.isEmail(e.target.email.value.trim());
+    this.setState(() => {
       console.log("Enter the email again", !emailError);
-    }
+      return { emailError: !emailError };
+    });
 
     if (e.target.password.value.trim() !== e.target.confirmPassword.value.trim()){
-      console.log("Password Mismatch");
+      this.setState(() => {
+        console.log("Password Mismatch", true);
+        return { passwordMismatchError: true };
+      })
+
+    } else {
+      this.setState(() => {
+        console.log("Password Mismatch", false);
+        return { passwordMismatchError: false };
+      })
     }
+
     const signupinfo = {
       username: e.target.username.value.trim(),
       password: e.target.password.value.trim(),
       email: e.target.email.value.trim()
     };
+
     var bodyFormData = new FormData();
     bodyFormData.set('username', signupinfo.username);
     bodyFormData.append('password', signupinfo.password);
@@ -37,12 +55,11 @@ class Signup extends Component{
     config: { headers: {'Content-Type': 'multipart/form-data' }}
     })
     .then(function (response) {
-        console.log(response);
+        console.log(response.data);
     })
     .catch(function (response) {
         console.log(response);
     });
-
   };
   render(){
     return(
@@ -60,31 +77,18 @@ class Signup extends Component{
         </div>
 
         <div>
-        <TextField
-          required
-          id="email"
-          label="Email"
-        />
+        {this.state.emailError ? <TextField required helperText="Email Invalid" id="email" label="Email" error/> :
+          <TextField required id="email" label="Email"/>}
         </div>
 
         <div>
-        <TextField
-          required
-          id="password"
-          type="password"
-          label="Password"
-          margin="normal"
-        />
+        <TextField required id="password" type="password" label="Password" margin="normal"/>
         </div>
 
         <div>
-        <TextField
-          required
-          id="confirmPassword"
-          type="password"
-          label="Confirm Password"
-          margin="normal"
-        />
+        {this.state.passwordMismatchError ?
+        <TextField required error helperText="Password Mismatch" id="confirmPassword" type="password" label="Confirm Password" margin="normal" /> :
+        <TextField required id="confirmPassword" type="password" label="Confirm Password" margin="normal" /> }
         </div>
 
         <div>
