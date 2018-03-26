@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Redirect} from 'react-router-dom';
+import {Redirect, Link} from 'react-router-dom';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import validator from 'validator';
@@ -12,7 +12,9 @@ class Signup extends Component{
     emailError: undefined,
     passwordError: undefined,
     passwordMismatchError: undefined,
-    usernameError: undefined
+    usernameError: undefined,
+    responseUsernameError: undefined,
+    responseEmailError: undefined
   }
 
   handleSignUp = (e) => {
@@ -47,7 +49,7 @@ class Signup extends Component{
     bodyFormData.set('username', signupinfo.username);
     bodyFormData.append('password', signupinfo.password);
     bodyFormData.append('email', signupinfo.email);
-
+    let that = this;
     axios({
     method: 'post',
     url: 'http://localhost:8000/api/v1/signup/',
@@ -55,7 +57,22 @@ class Signup extends Component{
     config: { headers: {'Content-Type': 'multipart/form-data' }}
     })
     .then(function (response) {
-        console.log(response.data);
+        console.log();
+        if (response.data.status === 'success'){
+          that.props.history.push("/welcome");
+        } else {
+          if (response.data.message.includes('Username')){
+            that.setState(() => {
+              return { responseUsernameError: true };
+            })
+          } else if (response.data.message.includes('Email')) {
+            that.setState(() => {
+              return { responseEmailError: true };
+            })
+          }
+
+        }
+
     })
     .catch(function (response) {
         console.log(response);
@@ -68,16 +85,12 @@ class Signup extends Component{
       <button size="large" className="big-button">Welcome to Beton</button>
       <form onSubmit={this.handleSignUp}>
         <div>
-        <TextField
-          required
-          id="username"
-          label="Username"
-          margin="normal"
-        />
+        {this.state.responseUsernameError ? <TextField required error helperText="User already exists" id="username" label="Username" margin="normal" /> :
+          <TextField required id="username" label="Username" margin="normal" />}
         </div>
 
         <div>
-        {this.state.emailError ? <TextField required helperText="Email Invalid" id="email" label="Email" error/> :
+        {this.state.emailError || this.state.responseEmailError ? <TextField required helperText="Email Invalid/Exists" id="email" label="Email" error/> :
           <TextField required id="email" label="Email"/>}
         </div>
 
