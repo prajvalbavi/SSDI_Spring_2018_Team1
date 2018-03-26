@@ -21,14 +21,21 @@ const styles = theme => ({
 
 class SimpleTable extends Component{
   state = {
-    persons: []
+    topics: [],
+    topics_info: []
   }
   componentDidMount() {
-    axios.get(`http://localhost:8000/api/v1/user/`)
+    axios.get(`http://localhost:8000/api/v1/topic/`)
       .then(res => {
-        const persons = res.data;
-        this.setState({ persons });
-        console.log(this.state.persons)
+        const topics = res.data;
+        this.setState({ topics });
+        console.log(this.state.topics)
+      })
+      axios.get(`http://localhost:8000/api/v1/betinfo/`)
+      .then(res => {
+        const topic_info = res.data;
+        this.setState({ topic_info });
+        console.log(this.state.topic_info)
       })
   }
   render(){
@@ -37,13 +44,13 @@ class SimpleTable extends Component{
       <Paper>
         <Table>
           <TableBody>
-            {this.state.persons.map(n => {
+            {this.state.topics.map(n => {
               return (
-                <TableRow key={n.fields.username}>
-                  <TableCell >{n.fields.username}</TableCell>
-                  <TableCell numeric><Button variant="raised">{n.fields.password}</Button></TableCell>
-                  <TableCell numeric><Button variant="raised">Hello2</Button></TableCell>
-                  <TableCell numeric><Button variant="raised">Hello3</Button></TableCell>
+                <TableRow key={n.fields.topic_id}>
+                  <TableCell >{n.fields.topic_name}</TableCell>
+                  <TableCell numeric><Button variant="raised">{n.fields.creator_name}</Button></TableCell>
+                  <TableCell numeric><Button variant="raised">{n.fields.creator_name}</Button></TableCell>
+                  <TableCell numeric><Button variant="raised">{n.fields.end_date}</Button></TableCell>
                 </TableRow>
               );
             })}
