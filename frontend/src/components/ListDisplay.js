@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
+import axios from 'axios'
+import Header from './Header.js'
 
 const styles = theme => ({
   root: {
@@ -16,30 +18,42 @@ const styles = theme => ({
   },
 });
 
-function SimpleTable(props) {
-  const { classes } = props;
-  return (
-    <Paper className={classes.root}>
-      <Table className={classes.table}>
-        <TableBody>
-          {props.persons.map(n => {
-            return (
-              <TableRow key={n.fields.username}>
-                <TableCell>{n.fields.username}</TableCell>
-                <TableCell numeric><Button variant="raised">{n.fields.password}</Button></TableCell>
-                <TableCell numeric><Button variant="raised">Hello2</Button></TableCell>
-                <TableCell numeric><Button variant="raised">Hello3</Button></TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </Paper>
-  );
+
+class SimpleTable extends Component{
+  state = {
+    persons: []
+  }
+  componentDidMount() {
+    axios.get(`http://localhost:8000/api/v1/user/`)
+      .then(res => {
+        const persons = res.data;
+        this.setState({ persons });
+        console.log(this.state.persons)
+      })
+  }
+  render(){
+    return (
+      <div>
+      <Paper>
+        <Table>
+          <TableBody>
+            {this.state.persons.map(n => {
+              return (
+                <TableRow key={n.fields.username}>
+                  <TableCell >{n.fields.username}</TableCell>
+                  <TableCell numeric><Button variant="raised">{n.fields.password}</Button></TableCell>
+                  <TableCell numeric><Button variant="raised">Hello2</Button></TableCell>
+                  <TableCell numeric><Button variant="raised">Hello3</Button></TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Paper>
+      </div>
+    );
+  }
 }
 
-SimpleTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
-export default withStyles(styles)(SimpleTable);
+export default SimpleTable;
