@@ -20,7 +20,7 @@ class SignupUser:
             if r_obj.username == username.lower():
                 return "Error", "Username already exists"
             elif r_obj.emailID == email_id.lower():
-                return "Error", "Username already exists"
+                return "Error", "Email already exists"
 
         except ObjectDoesNotExist:
             return SignupUser.create_user(username,password, email_id)
