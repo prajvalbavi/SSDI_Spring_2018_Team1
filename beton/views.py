@@ -7,6 +7,7 @@ from beton.serializers import PostSerializer
 from rest_framework.renderers import JSONRenderer
 from django.core import serializers
 import json
+from beton.BusinessLayer.SignupUser import SignupUser
 # Create your views here.
 
 
@@ -30,11 +31,10 @@ def post_signup(request):
         print("Username" , request_data.get('username'))
         print("Password", request_data.get('password'))
         print("Email", request_data.get('email'))
-        if len(Userinfo.objects.filter(username=request_data.get('username'))) > 0:
-            messagedict['message'] = "Email already exists"
-            messagedict['status'] = "failure"
-        else:
-            messagedict['status'] = "success"
+        status, message = SignupUser.signup(request_data.get('username'), request_data.get('password'),
+                                            request_data.get('email') )
+        messagedict['message'] = message
+        messagedict['status'] = status
         server_message = json.dumps(messagedict)
         print(server_message)
         print(request.POST)
