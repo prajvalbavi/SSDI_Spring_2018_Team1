@@ -27,13 +27,14 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.views.generic import TemplateView
 from beton.views import Dbtest
-from beton.views import post_collection
+from beton.views import post_collection, post_signup
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^index/', TemplateView.as_view(template_name="index.html")),
     url(r'^dbtest/', Dbtest),
     url(r'^api/v1/user/$', post_collection, name='post_collection'),
+    url(r'^api/v1/signup/', post_signup, name='post_signup'),
 
 ]
 

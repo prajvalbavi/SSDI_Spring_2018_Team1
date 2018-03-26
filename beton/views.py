@@ -21,3 +21,12 @@ def post_collection(request):
         json_data = serializers.serialize('json', posts, fields=('username','password'))
         return HttpResponse(json_data, content_type="application/json")
 
+@api_view(['POST'])
+def post_signup(request):
+    if request.method == 'POST':
+        request_data = request.POST
+        print("Username" , request_data.get('username'))
+        print("Password", request_data.get('password'))
+        print("Email", request_data.get('email'))
+        print(request.POST)
+        return HttpResponse(request.POST, content_type="application/json")
