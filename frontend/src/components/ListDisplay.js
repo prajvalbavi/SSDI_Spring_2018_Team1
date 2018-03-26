@@ -7,7 +7,6 @@ import Button from 'material-ui/Button';
 import axios from 'axios'
 import Header from './Header.js'
 
-
 const styles = theme => ({
   root: {
     width: '100%',
@@ -18,7 +17,6 @@ const styles = theme => ({
     minWidth: 700,
   },
 });
-
 
 
 class SimpleTable extends Component{
@@ -33,18 +31,16 @@ class SimpleTable extends Component{
         console.log(this.state.persons)
       })
   }
-
   render(){
     return (
       <div>
-        <Header/>
       <Paper>
         <Table>
           <TableBody>
             {this.state.persons.map(n => {
               return (
                 <TableRow key={n.fields.username}>
-                  <TableCell>{n.fields.username}</TableCell>
+                  <TableCell >{n.fields.username}</TableCell>
                   <TableCell numeric><Button variant="raised">{n.fields.password}</Button></TableCell>
                   <TableCell numeric><Button variant="raised">Hello2</Button></TableCell>
                   <TableCell numeric><Button variant="raised">Hello3</Button></TableCell>

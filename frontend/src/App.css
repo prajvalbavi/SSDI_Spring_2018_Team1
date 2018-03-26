@@ -22,6 +22,30 @@
   font-size: large;
 }
 
+.big-button{
+  background: #808080;
+  border: none;
+  border-bottom: .6rem solid darken(#808080, 10%);
+  color: white;
+  font-weight: bold;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  padding:  2.4rem;
+  width: 50%
+}
+.button {
+  background: red;
+  border: none;
+  font-size: 1rem;
+  color: white;
+  font-weight: 500;
+  padding: 1rem;
+  width: 12%;
+  margin-top: 2rem;
+  margin-bottom: 2.4rem;
+
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
