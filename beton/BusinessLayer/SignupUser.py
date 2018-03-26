@@ -8,7 +8,7 @@ class SignupUser:
     @staticmethod
     def create_user(username, password, email_id):
         try:
-            Userinfo.objects.create(username=username, password=password, emailID=email_id)
+            Userinfo.objects.create(username=username.lower(), password=password, emailID=email_id.lower())
             return "Success", "User added successfully"
         except Exception as e:
             return "Exception", str(e)
@@ -16,10 +16,10 @@ class SignupUser:
     @staticmethod
     def signup(username, password, email_id):
         try:
-            r_obj = Userinfo.objects.get(Q(username=username) | Q(emailId=email_id))
-            if r_obj.username == username:
+            r_obj = Userinfo.objects.get(Q(username=username.lower()) | Q(emailId=email_id.lower()))
+            if r_obj.username == username.lower():
                 return "Error", "Username already exists"
-            elif r_obj.emailID == email_id:
+            elif r_obj.emailID == email_id.lower():
                 return "Error", "Username already exists"
 
         except ObjectDoesNotExist:
