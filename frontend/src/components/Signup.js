@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import validator from 'validator';
 import axios from 'axios';
-import Header from './Header.js'
+import HeaderSignup from './HeaderSignup.js'
 
 
 class Signup extends Component{
@@ -112,7 +112,7 @@ class Signup extends Component{
   render(){
     return(
       <div>
-      <Header/>
+      <HeaderSignup/>
       <button size="large" className="big-button">Welcome to Beton</button>
       <form onSubmit={this.handleSignUp}>
         <div>
