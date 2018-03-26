@@ -31,7 +31,7 @@ def post_signup(request):
         print("Password", request_data.get('password'))
         print("Email", request_data.get('email'))
         if len(Userinfo.objects.filter(username=request_data.get('username'))) > 0:
-            messagedict['message'] = "Username already exists"
+            messagedict['message'] = "Email already exists"
             messagedict['status'] = "failure"
         else:
             messagedict['status'] = "success"
