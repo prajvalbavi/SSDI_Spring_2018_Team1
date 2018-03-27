@@ -7,7 +7,7 @@ import Button from 'material-ui/Button';
 import axios from 'axios'
 import Header from './Header.js'
 import Grid from 'material-ui/Grid';
-
+import {Link} from 'react-router-dom';
 
 const styles = theme => ({
     root: {
@@ -55,6 +55,7 @@ class SimpleTable extends Component{
       })
   }
 
+
   render(){
       const {classes} = this.props
     return (
@@ -66,9 +67,12 @@ class SimpleTable extends Component{
                     <Paper elevation={10} className={classes.paper}>
                         <div>Created by: {n.fields.creator_name}</div>
                         <div>End date: {n.fields.end_date}</div>
-                        <Button fullWidth variant="raised" className={classes.flatbutton}>
+
+                         <Link to="/login">
+                        <Button fullWidth variant="raised" className={classes.flatbutton} >
                             Place Bet
                         </Button>
+                         </Link>
                     </Paper>
                   </Grid>
               );
