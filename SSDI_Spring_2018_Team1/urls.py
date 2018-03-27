@@ -26,15 +26,16 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.views.generic import TemplateView
-from beton.views import Dbtest
-from beton.views import post_collection, post_signup
+from beton.views import post_signup, get_user, get_topics, get_betinfo, get_bet_topics_and_info
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^index/', TemplateView.as_view(template_name="index.html")),
-    url(r'^dbtest/', Dbtest),
-    url(r'^api/v1/user/$', post_collection, name='post_collection'),
     url(r'^api/v1/signup/', post_signup, name='post_signup'),
+    url(r'^api/v1/user/$', get_user, name='get_user'),
+    url(r'^api/v1/topic/$', get_topics, name='get_topics'),
+    url(r'^api/v1/betinfo/$', get_betinfo, name='get_betinfo'),
+    url(r'^api/v1/topicsandinfo/$', get_bet_topics_and_info, name='get_bet_topics_and_info'),
 
 ]
 
