@@ -6,16 +6,32 @@ import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 import axios from 'axios'
 import Header from './Header.js'
+import Grid from 'material-ui/Grid';
+import {Link} from 'react-router-dom';
 
 const styles = theme => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    overflowX: 'auto',
-  },
-  table: {
-    minWidth: 700,
-  },
+    root: {
+        marginTop: theme.spacing.unit * 3,
+        flexGrow: 1,
+    },
+    table: {
+        minWidth: 700,
+    },
+    paper: {
+        padding: 2,
+        color: theme.palette.text.secondary,
+        height: 140,
+        width: 300,
+        backgroundColor: '#f0f4c3',
+        margin: 20
+    },
+    flatbutton:{
+        color: "#FFFDE7",
+        backgroundColor: "#004D40",
+        marginTop: 100
+
+    }
+
 });
 
 
@@ -38,29 +54,35 @@ class SimpleTable extends Component{
         console.log(this.state.topic_info)
       })
   }
+
+
   render(){
+      const {classes} = this.props
     return (
       <div>
-      <Paper>
-        <Table>
-          <TableBody>
+          <Grid container spacing={300} className={classes.root}>
             {this.state.topics.map(n => {
               return (
-                <TableRow key={n.fields.topic_id}>
-                  <TableCell >{n.fields.topic_name}</TableCell>
-                  <TableCell numeric><Button variant="raised">{n.fields.creator_name}</Button></TableCell>
-                  <TableCell numeric><Button variant="raised">{n.fields.creator_name}</Button></TableCell>
-                  <TableCell numeric><Button variant="raised">{n.fields.end_date}</Button></TableCell>
-                </TableRow>
+                  <Grid item xs={100} >
+                    <Paper elevation={10} className={classes.paper}>
+                        <div>Created by: {n.fields.creator_name}</div>
+                        <div>End date: {n.fields.end_date}</div>
+
+                         <Link to="/login">
+                        <Button fullWidth variant="raised" className={classes.flatbutton} >
+                            Place Bet
+                        </Button>
+                         </Link>
+                    </Paper>
+                  </Grid>
               );
             })}
-          </TableBody>
-        </Table>
-      </Paper>
+
+          </Grid>
       </div>
     );
   }
 }
 
 
-export default SimpleTable;
+export default withStyles(styles)(SimpleTable);
