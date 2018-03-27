@@ -32,6 +32,9 @@ def post_signup(request):
                                             request_data.get('email') )
         messagedict['message'] = message
         messagedict['status'] = status
+        messagedict['email_id'] = request_data.get('email')
+        messagedict['username'] = request_data.get('username')
+
         server_message = json.dumps(messagedict)
         print(server_message)
         print(request.POST)
