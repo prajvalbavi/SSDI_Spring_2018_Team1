@@ -16,7 +16,8 @@ class SignupUser:
     @staticmethod
     def signup(username, password, email_id):
         try:
-            r_obj = Userinfo.objects.get(Q(username=username.lower()) | Q(emailId=email_id.lower()))
+            print (username,password,email_id)
+            r_obj = Userinfo.objects.get(Q(username=username.lower()) | Q(emailID=email_id.lower()))
             if r_obj.username == username.lower():
                 return "Error", "Username already exists"
             elif r_obj.emailID == email_id.lower():
@@ -24,6 +25,8 @@ class SignupUser:
 
         except ObjectDoesNotExist:
             return SignupUser.create_user(username,password, email_id)
+        except MultipleObjectsReturned:
+            return "Exception", "This should have never happened the username and email id are unique"
 
 
 
