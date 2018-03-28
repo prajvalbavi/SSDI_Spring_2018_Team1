@@ -94,11 +94,17 @@ class Signup extends Component{
           if (response.data.message.includes('Username')){
             that.setState(() => {
               return { responseUsernameError: true };
-            })
+            });
+            that.setState(() => {
+              return { responseEmailError: false };
+            });
           } else if (response.data.message.includes('Email')) {
             that.setState(() => {
               return { responseEmailError: true };
-            })
+            });
+              that.setState(() => {
+              return { responseUsernameError: false };
+            });
           }
 
         }
