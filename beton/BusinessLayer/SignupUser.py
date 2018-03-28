@@ -9,9 +9,9 @@ class SignupUser:
     def create_user(username, password, email_id):
         try:
             Userinfo.objects.create(username=username.lower(), password=password, emailID=email_id.lower())
-            return "Success", "User added successfully"
+            return "success", "User added successfully"
         except Exception as e:
-            return "Exception", str(e)
+            return "exception", str(e)
 
     @staticmethod
     def signup(username, password, email_id):
@@ -19,14 +19,13 @@ class SignupUser:
             print (username,password,email_id)
             r_obj = Userinfo.objects.get(Q(username=username.lower()) | Q(emailID=email_id.lower()))
             if r_obj.username == username.lower():
-                return "Error", "Username already exists"
+                return "error", "Username already exists"
             elif r_obj.emailID == email_id.lower():
-                return "Error", "Email already exists"
+                return "error", "Email already exists"
 
         except ObjectDoesNotExist:
             return SignupUser.create_user(username,password, email_id)
-        except MultipleObjectsReturned:
-            return "Exception", "This should have never happened the username and email id are unique"
-
+        except MultipleObjectsReturned as m:
+            return "exception", "Both username and Email already exists"
 
 
