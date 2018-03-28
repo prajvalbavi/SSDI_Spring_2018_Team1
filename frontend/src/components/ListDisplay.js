@@ -18,17 +18,23 @@ const styles = theme => ({
         minWidth: 700,
     },
     paper: {
-        padding: 2,
+        paddingTop: 30,
         color: theme.palette.text.secondary,
         height: 140,
-        width: 300,
+        width: 350,
         backgroundColor: '#f0f4c3',
-        margin: 20
+        marginTop: 20,
+        marginLeft: 20,
+        marginRight: 10
+
     },
     flatbutton:{
         color: "#FFFDE7",
         backgroundColor: "#004D40",
-        marginTop: 100
+        width: 350,
+        marginLeft: 20,
+        marginRight: 10
+
 
     }
 
@@ -60,17 +66,16 @@ class SimpleTable extends Component{
                   <Grid item xs={100} >
                     <Paper elevation={10} className={classes.paper}>
                         <div>Topic Name: {n.topic_name}</div>
-                        <div>Created by: {n.creator_name}</div>
                         <div>End date: {n.end_date}</div>
                         <div>Total Users: {n.total_users}</div>
                         <div>Total Amount: {n.total_amount}</div>
-
+                        </Paper>
                          <Link to="/login">
                         <Button fullWidth variant="raised" className={classes.flatbutton} >
                             Place Bet
                         </Button>
                          </Link>
-                    </Paper>
+
                   </Grid>
               );
             })}
