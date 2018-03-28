@@ -62,6 +62,8 @@ def get_bet_topics_and_info(request):
     if request.method == 'GET':
         b = BetInformation()
         message_dict = b.get_info_by_topic()
-        #message_dict = [x.values() for x in message_dict]
-        server_message  = json.dumps(message_dict)
+        new_dict = {}
+        new_dict['topics'] = [value for key, value in message_dict.items()]
+        print(new_dict)
+        server_message = json.dumps(new_dict)
         return HttpResponse(server_message, content_type="application/json")

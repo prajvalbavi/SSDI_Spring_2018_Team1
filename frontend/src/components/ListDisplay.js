@@ -41,16 +41,10 @@ class SimpleTable extends Component{
     topics_info: []
   }
   componentDidMount() {
-    axios.get(`http://localhost:8000/api/v1/topic/`)
+      axios.get(`http://localhost:8000/api/v1/topicsandinfo/`)
       .then(res => {
-        const topics = res.data;
-        this.setState({ topics });
-        console.log(this.state.topics)
-      })
-      axios.get(`http://localhost:8000/api/v1/betinfo/`)
-      .then(res => {
-        const topic_info = res.data;
-        this.setState({ topic_info });
+        const topics_info = JSON.parse(JSON.stringify(res.data));
+        this.setState({ topics_info: topics_info.topics });
         console.log(this.state.topic_info)
       })
   }
@@ -60,13 +54,16 @@ class SimpleTable extends Component{
       const {classes} = this.props
     return (
       <div>
-          <Grid container spacing={300} className={classes.root}>
-            {this.state.topics.map(n => {
+          <Grid container spacing={40} className={classes.root}>
+            {this.state.topics_info.map(n => {
               return (
                   <Grid item xs={100} >
                     <Paper elevation={10} className={classes.paper}>
-                        <div>Created by: {n.fields.creator_name}</div>
-                        <div>End date: {n.fields.end_date}</div>
+                        <div>Topic Name: {n.topic_name}</div>
+                        <div>Created by: {n.creator_name}</div>
+                        <div>End date: {n.end_date}</div>
+                        <div>Total Users: {n.total_users}</div>
+                        <div>Total Amount: {n.total_amount}</div>
 
                          <Link to="/login">
                         <Button fullWidth variant="raised" className={classes.flatbutton} >
