@@ -7,7 +7,6 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import mylogo from '../logo-new.png'
-import LoginButton from '../components/LoginButton.js'
 
 const styles = {
   root: {
@@ -38,7 +37,6 @@ function SimpleAppBar(props) {
             <img src={mylogo} height="50" width="150"  className={classes.logo}/>
             </Link>
           </Typography>
-          <LoginButton/>
         </Toolbar>
       </AppBar>
     </div>

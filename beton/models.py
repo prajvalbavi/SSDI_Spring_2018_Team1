@@ -22,7 +22,7 @@ class Topics(models.Model):
 
 class BetInfo(models.Model):
     bet_id = models.AutoField(primary_key=True)
-    topic_id = models.ForeignKey(Topics)
+    topic_id = models.ForeignKey(Topics, on_delete = models.SET(0))
     option = models.CharField(max_length=20, default = "Null")
     total_amount = models.IntegerField(default = 0)
     total_users = models.IntegerField(default = 0)
