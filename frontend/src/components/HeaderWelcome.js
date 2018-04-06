@@ -7,9 +7,8 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import mylogo from '../logo-new.png'
-import LoginButton from '../components/LoginButton.js'
-import SignoutButton from '../components/SignoutButton.js'
 import UserWelcomeButton from '../components/UserWelcomeButton.js'
+import SignoutButton from '../components/SignoutButton.js'
 
 const styles = {
   root: {
@@ -19,18 +18,19 @@ const styles = {
     marginLeft: 30,
     marginRight: 850,
   },
-  loginButton: {
+  userButton: {
     marginLeft: 0,
-    marginRight: 10,
+    marginRight: 100,
   },
-  registerButton: {
+  signoutButton: {
     marginLeft: 0,
-    marginRight: 0,
+    marginRight: 50,
   }
 };
 
 function SimpleAppBar(props) {
   const { classes } = props;
+  console.log(classes)
   return (
     <div className={classes.root}>
       <AppBar position="static" color="default">
@@ -40,8 +40,8 @@ function SimpleAppBar(props) {
             <img src={mylogo} height="50" width="150"  className={classes.logo}/>
             </Link>
           </Typography>
-          <UserWelcomeButton username="Prajval"/>
-          <SignoutButton/>
+          <UserWelcomeButton username={props.username} />
+          <SignoutButton />
         </Toolbar>
       </AppBar>
     </div>

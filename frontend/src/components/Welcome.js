@@ -38,10 +38,10 @@ class SimpleTabs extends React.Component {
   render() {
     const { classes } = this.props;
     const { value } = this.state;
-
     return (
       <div>
-      <HeaderWelcome/>
+
+      <HeaderWelcome username={this.props.location.state.detail}/>
       <div className={classes.root}>
         <AppBar position="static">
           <Tabs value={value} onChange={this.handleChange}>

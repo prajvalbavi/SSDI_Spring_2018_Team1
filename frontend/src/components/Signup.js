@@ -13,7 +13,7 @@ class Signup extends Component{
     passwordError: undefined,
     passwordMismatchError: undefined,
     responseUsernameError: undefined,
-    responseEmailError: undefined,
+    responseEmailError: undefined
   }
 
   handlePasswordError = (passwordValue) => {
@@ -44,7 +44,6 @@ class Signup extends Component{
       finalCheck = false;
       this.setState(() => {
         console.log("Password Invalid", true);
-        alert('Password should be of lenght 6, should contain atleast one lowercase, uppercase and a number');
         return { passwordError: true };
       })
     } else {
@@ -88,8 +87,11 @@ class Signup extends Component{
     config: { headers: {'Content-Type': 'multipart/form-data' }}
     })
     .then(function (response) {
+        console.log();
         if (response.data.status === 'success'){
-          that.props.history.push("/welcome/");
+          that.props.history.push({
+            pathname:"/welcome",
+            state: { detail: response.data.username}});
         } else {
           if (response.data.message.includes('Username')){
             that.setState(() => {
@@ -111,7 +113,7 @@ class Signup extends Component{
 
     })
     .catch(function (response) {
-        console.log(response);
+        console.log("Server Error");
     });
   }
   };

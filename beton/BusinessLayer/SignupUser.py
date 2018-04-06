@@ -26,6 +26,6 @@ class SignupUser:
         except ObjectDoesNotExist:
             return SignupUser.create_user(username,password, email_id)
         except MultipleObjectsReturned as m:
-            return "exception", "Both username and Email already exists"
+            return "exception", "Both Username and Email already exists"
 
 

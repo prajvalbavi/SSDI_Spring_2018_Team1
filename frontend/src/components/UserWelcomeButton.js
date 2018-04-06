@@ -6,7 +6,7 @@ import Button from 'material-ui/Button';
 const UserWelcomeButton = (username) => {
   return (
     <div>
-      <Button variant="raised" color="secondary" >
+      <Button variant="raised" color="secondary">
       {username.username}
       </Button>
     </div>
