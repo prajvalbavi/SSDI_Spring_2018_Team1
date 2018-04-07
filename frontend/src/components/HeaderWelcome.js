@@ -41,6 +41,7 @@ function SimpleAppBar(props) {
             </Link>
           </Typography>
           <UserWelcomeButton username={props.username} />
+          {/*<UserWelcomeButton username="Prajval" />*/}
           <SignoutButton />
         </Toolbar>
       </AppBar>

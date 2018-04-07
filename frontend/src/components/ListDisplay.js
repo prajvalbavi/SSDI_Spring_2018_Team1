@@ -51,7 +51,6 @@ class SimpleTable extends Component{
       .then(res => {
         const topics_info = JSON.parse(JSON.stringify(res.data));
         this.setState({ topics_info: topics_info.topics });
-        console.log(this.state.topic_info)
       })
   }
 
