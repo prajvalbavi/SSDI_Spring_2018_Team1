@@ -6,63 +6,123 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
 import ListDisplay from '../components/ListDisplay.js'
 import HeaderWelcome from '../components/HeaderWelcome.js'
+import setAuthorizationToken from "./setAuthorizationToken";
+import axios from "axios/index";
+
 
 function TabContainer(props) {
-  return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {props.children}
-    </Typography>
-  );
+    return (
+        <Typography component="div" style={{ padding: 8 * 3 }}>
+            {props.children}
+        </Typography>
+    );
 }
 TabContainer.propTypes = {
-  children: PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired,
 };
 
 const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    marginTop: theme.spacing.unit,
-    backgroundColor: theme.palette.background.paper,
-  },
+    root: {
+        flexGrow: 1,
+        marginTop: theme.spacing.unit,
+        backgroundColor: theme.palette.background.paper,
+    },
 });
 
 class SimpleTabs extends React.Component {
-  state = {
-    value: 0,
-  };
+    constructor(props, context){
+        super(props, context)
+    }
+    state = {
+        value: 0,
+        valid_user: false,
+        validated: false
+    };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
+    componentDidMount(){
+        if (!this.state.validated) {
+            this.PerformValidation()
+        }
 
-  render() {
-    const { classes } = this.props;
-    const { value } = this.state;
 
-    return (
-      <div>
-      <HeaderWelcome/>
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Tabs value={value} onChange={this.handleChange}>
-            <Tab label="Public" />
-            <Tab label="Private" />
-            <Tab label="Request"/>
-            <Tab label="Balance"/>
-          </Tabs>
-        </AppBar>
-        {value === 0 && <ListDisplay/>}
-        {value === 1 && <TabContainer>Not in Sprint 1</TabContainer>}
-        {value === 2 && <TabContainer>Not in Sprint 1</TabContainer>}
-        {value === 3 && <TabContainer>Not in Sprint 1</TabContainer>}
-      </div>
-      </div>
-    );
-  }
+    }
+
+    handleChange = (event, value) => {
+        this.setState({ value });
+    };
+
+    PerformValidation(){
+
+        const token = localStorage.jwtToken;
+        setAuthorizationToken(token)
+        let isValidUser = true;
+
+        axios({
+            method: 'post',
+            url: 'http://localhost:8000/api/v1/validuser/',
+            config: { headers: {'Content-Type': 'multipart/form-data' }}
+        }).then(
+            (res) => this.setState({
+
+                valid_user:true, validated: true
+            }),
+            (err) => this.setState({
+                    valid_user:false, validated: true
+                })
+        )
+
+    }
+
+    render() {
+        const { classes } = this.props;
+        const { value } = this.state.value;
+        console.log('render', this.state)
+        if(this.state.validated && !this.state.valid_user){
+            console.log("routing to login")
+            this.context.router.history.push("/login")
+        }
+        //
+        // if (!this.state.validated) {
+        //     console.log('*Before welcome', 'Validated:', this.state.validated, 'valid_user:' , this.state.valid_user)
+        //     this.PerformValidation()
+        //
+        //     console.log('*After welcome', 'Validated:', this.state.validated, 'valid_user:' , this.state.valid_user)
+        //
+        // }
+        //
+        // if(!this.state.valid_user){
+        //     this.context.router.history.push("/login")
+        // }
+
+        return (
+
+            <div>
+                <HeaderWelcome/>
+                <div className={classes.root}>
+                    <AppBar position="static">
+                        <Tabs value={value} onChange={this.handleChange}>
+                            <Tab label="Public" />
+                            <Tab label="Private" />
+                            <Tab label="Request"/>
+                            <Tab label="Balance"/>
+                        </Tabs>
+                    </AppBar>
+                    {value === 0 && this.state.valid_user && <ListDisplay/>}
+                    {value === 1 && <TabContainer>Not in Sprint 1</TabContainer>}
+                    {value === 2 && <TabContainer>Not in Sprint 1</TabContainer>}
+                    {value === 3 && <TabContainer>Not in Sprint 1</TabContainer>}
+                </div>
+            </div>
+        );
+    }
 }
 
 SimpleTabs.propTypes = {
-  classes: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
 };
+
+SimpleTabs.contextTypes = {
+    router: PropTypes.object
+}
 
 export default withStyles(styles)(SimpleTabs);
