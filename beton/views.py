@@ -9,12 +9,33 @@ from django.core import serializers
 import json
 from beton.BusinessLayer.SignupUser import SignupUser
 from beton.BusinessLayer.GetPublicTopics import BetInformation
+
+from beton.BusinessLayer.AuthenticateUser import Authenticate
+from beton.BusinessLayer.ValidateUser import Validate
+from rest_framework.authentication import get_authorization_header
+
 from beton.BusinessLayer.GetBetDetails import BetDetails
 from beton.BusinessLayer.PlaceABet import PlaceABet
 
 
 # Create your views here.
 
+#Checks token is valid and if username or email matches with decoded name in token.
+def util_validate_user(request):
+    try:
+        auth = get_authorization_header(request)
+        auth = auth.decode('utf-8')
+
+        print(auth)
+        is_valid_user = False
+        message = ''
+        if auth:
+            is_valid_user, message = Validate.is_user_valid(auth)
+            return is_valid_user, message
+        else:
+            return False, 'Header not found, user will not be authenticated.'
+    except Exception:
+        return False, 'Exception occurred, user will not be authenticated'
 
 
 @api_view(['GET'])
@@ -72,6 +93,48 @@ def get_bet_topics_and_info(request):
         return HttpResponse(server_message, content_type="application/json")
 
 
+
+@api_view(['POST'])
+def auth_user(request):
+    if request.method == 'POST':
+
+        post_request = request.POST
+        username = post_request.get('username')
+        password  = post_request.get('password')
+        print (username)
+        print (password)
+        result, message = Authenticate.authenticate_user(username,password)\
+
+        if result:
+            print("is valid user", util_validate_user(request))
+            payload_data = {"username": username}
+            print (payload_data)
+            token = Authenticate.generate_token(payload_data)
+            token = token.decode('utf-8')
+            jwt_token = {'token': token}
+            print (json.dumps(jwt_token))
+            return HttpResponse(json.dumps(jwt_token), content_type="application/json")
+        else:
+            error_message = {'errors':{'form' : message}}
+            error_message = json.dumps(error_message)
+            print (error_message)
+            return HttpResponse(error_message, content_type="application/json", status=401)
+
+@api_view(['POST'])
+def validate_user(request):
+    if request.method == 'POST':
+        print("Received request to validate_user", request.method)
+        is_valid_user, message = util_validate_user(request)
+        json_reply = {'isValid': is_valid_user}
+        print ("Validate_user response message" , json_reply)
+        json_reply = json.dumps(json_reply)
+        status_ = 200 if is_valid_user else 401
+        print ('*status*', status_)
+        return HttpResponse(json_reply, content_type="application/json", status = status_)
+
+
+
+
 @api_view(['GET'])
 def get_bet_details(request):
     if request.method == 'GET':
@@ -88,3 +151,4 @@ def place_a_bet(request):
         response = p.place_a_bet(request.GET['topic_id'], request.GET['username'], request.GET['option'], request.GET['amount'])
         json_data = json.dumps(response)
         return HttpResponse(json_data, content_type="application/json")
+

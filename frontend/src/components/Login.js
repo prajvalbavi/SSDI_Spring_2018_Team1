@@ -1,12 +1,19 @@
-import React from 'react'
-import Header from './Header.js'
-const Login = () => {
-  return(
-    <div>
-      <Header/>
-      Not in Sprint 1
-    </div>
-  );
-};
+import React from "react";
+import HeaderSignup from "./HeaderSignup.js";
+import LoginForm from "./LoginForm";
+import validateInput from "./LoginValidator"
 
-export default Login;
+export default class Login extends React.Component {
+
+    render() {
+        return (
+            <div>
+                <HeaderSignup />
+                 <button size="large" className="big-button">Welcome to Beton</button>
+                <div className="loginform">
+                    <LoginForm />
+                </div>
+            </div>
+        );
+    }
+}
