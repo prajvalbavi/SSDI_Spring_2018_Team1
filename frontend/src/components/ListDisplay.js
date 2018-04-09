@@ -10,10 +10,7 @@ import Grid from 'material-ui/Grid';
 import {Link} from 'react-router-dom';
 import List, { ListItem, ListItemAvatar, ListItemText } from 'material-ui/List';
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
-
-
 const options = ['KK@gmail.com', 'user02@gmail.com'];
-
 const styles = theme => ({
     root: {
         marginTop: theme.spacing.unit * 3,
@@ -31,7 +28,6 @@ const styles = theme => ({
         marginTop: 20,
         marginLeft: 20,
         marginRight: 10
-
     },
     flatbutton:{
         color: "#FFFDE7",
@@ -39,74 +35,68 @@ const styles = theme => ({
         width: 350,
         marginLeft: 20,
         marginRight: 10
-
-
     }
-
 });
-
-
 class SimpleDialog extends React.Component {
+    state = {
+        option_info: [],
+    }
   handleClose = () => {
     this.props.onClose(this.props.selectedValue);
   };
-
   handleListItemClick = value => {
     this.props.onClose(value);
   };
-
   componentDidMount() {
-      axios.get(`http://localhost:8000/api/v1/topicsandinfo/?topic_id=` + this.props.topic_id)
+      axios.get(`http://localhost:8000/api/v1/betdetails/?topic_id=1`)
       .then(res => {
         const topics_info = JSON.parse(JSON.stringify(res.data));
+        //this.setState({ option_info: topics_info.topics });
         console.log(topics_info);
-        this.setState({ topics_info: topics_info.topics });
       })
   }
-
-  render(){
+  render() {
     const { onClose, selectedValue, topic_id, ...other } = this.props;
     return (
-      <div>
-            {this.state.topics_info.map(n => {
-              return (
-                  <div>
-                    <Dialog onClose={this.handleClose} aria-labelledby="Bet Details" {...other}>
-                    <DialogTitle id="simple-dialog-title">Topic Details for {topic_id}</DialogTitle>
-                    <div>Topic Name: {n.option}</div>
-                    <div>End date: {n.amount__sum}</div>
-                    <div>Total Users: {n.number_of_users}</div>
-                    </Dialog>
-                  </div>);
-            })}
-      </div>
+      <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
+        <DialogTitle id="simple-dialog-title">Topic Details for {topic_id}</DialogTitle>
+        <div>
+          <List>
+            {options.map(option => (
+              <ListItem button onClick={() => this.handleListItemClick(option)} key={option}>
+                <ListItemText primary={option} />
+              </ListItem>
+            ))}
+            <ListItem button onClick={() => this.handleListItemClick('addAccount')}>
+              <ListItemText primary="add account" />
+            </ListItem>
+          </List>
+        </div>
+      </Dialog>
     );
   }
 }
-
-
-
 SimpleDialog.propTypes = {
   onClose: PropTypes.func,
   selectedValue: PropTypes.string,
   topic_id: PropTypes.string,
 };
 const SimpleDialogWrapped =(SimpleDialog);
-
-
 class SimpleTable extends Component{
   state = {
     topics: [],
     topics_info: [],
+      bet_info: {},
     open: false,
+      topic_id : "1",
   }
-
-  handleClickOpen = () => {
+  handleClickOpen = (e) => {
+      console.log(e.target.id);
     this.setState({
       open: true,
-    });
+        topic_id : e.target.id
+    })
   };
-
   handleClose = value => {
     this.setState({ open: false });
   };
@@ -114,20 +104,17 @@ class SimpleTable extends Component{
       axios.get(`http://localhost:8000/api/v1/topicsandinfo/`)
       .then(res => {
         const topics_info = JSON.parse(JSON.stringify(res.data));
-        console.log(topics_info);
         this.setState({ topics_info: topics_info.topics });
       })
   }
-
-
   render(){
       const {classes} = this.props
     return (
       <div>
           <Grid container spacing={40} className={classes.root}>
-            {this.state.topics_info.map(n => {
+            {this.state.topics_info.map((n,index) => {
               return (
-                  <Grid item>
+                  <Grid item key={index}>
                     <Paper elevation={10} className={classes.paper}>
                         <div>Topic Name: {n.topic_name}</div>
                         <div>End date: {n.end_date}</div>
@@ -139,20 +126,17 @@ class SimpleTable extends Component{
                             Place Bet
                         </Button>
                          </Link>
-                      <Button id = {n.topic_id} onClick={this.handleClickOpen}>Bet Details</Button>
+                      <button id = {n.topic_id} onClick = {(e) => this.handleClickOpen(e)}>Bet Details</button>
                         <SimpleDialogWrapped
                           open={this.state.open}
                           onClose={this.handleClose}
-                          topic_id={'3'}
+                          topic_id={this.state.topic_id}
                         />
                   </Grid>);
             })}
-
           </Grid>
       </div>
     );
   }
 }
-
-
 export default withStyles(styles)(SimpleTable);
