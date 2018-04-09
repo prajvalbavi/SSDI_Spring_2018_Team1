@@ -2,16 +2,21 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 
-from beton.models import Userinfo, Topics, BetInfo
+from beton.models import Userinfo, Topics, BetInfo, Bets
 from beton.serializers import PostSerializer
 from rest_framework.renderers import JSONRenderer
 from django.core import serializers
 import json
 from beton.BusinessLayer.SignupUser import SignupUser
 from beton.BusinessLayer.GetPublicTopics import BetInformation
+
 from beton.BusinessLayer.AuthenticateUser import Authenticate
 from beton.BusinessLayer.ValidateUser import Validate
 from rest_framework.authentication import get_authorization_header
+
+from beton.BusinessLayer.GetBetDetails import BetDetails
+from beton.BusinessLayer.PlaceABet import PlaceABet
+
 
 # Create your views here.
 
@@ -88,7 +93,7 @@ def get_bet_topics_and_info(request):
         return HttpResponse(server_message, content_type="application/json")
 
 
-#This is to create a login.
+
 @api_view(['POST'])
 def auth_user(request):
     if request.method == 'POST':
@@ -128,4 +133,22 @@ def validate_user(request):
         return HttpResponse(json_reply, content_type="application/json", status = status_)
 
 
+
+
+@api_view(['GET'])
+def get_bet_details(request):
+    if request.method == 'GET':
+        b = BetDetails()
+        options = b.get_bet_details(request.GET['topic_id'])
+        json_data = json.dumps(options)
+        return HttpResponse(json_data, content_type="application/json")
+
+
+@api_view(['GET'])
+def place_a_bet(request):
+    if request.method == 'GET':
+        p = PlaceABet()
+        response = p.place_a_bet(request.GET['topic_id'], request.GET['username'], request.GET['option'], request.GET['amount'])
+        json_data = json.dumps(response)
+        return HttpResponse(json_data, content_type="application/json")
 
