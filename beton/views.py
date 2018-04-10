@@ -10,13 +10,14 @@ import json
 from beton.BusinessLayer.SignupUser import SignupUser
 from beton.BusinessLayer.GetPublicTopics import BetInformation
 
+
 from beton.BusinessLayer.AuthenticateUser import Authenticate
 from beton.BusinessLayer.ValidateUser import Validate
 from rest_framework.authentication import get_authorization_header
 
 from beton.BusinessLayer.GetBetDetails import BetDetails
 from beton.BusinessLayer.PlaceABet import PlaceABet
-
+from beton.BusinessLayer.CheckUser import  CheckUser
 
 # Create your views here.
 
@@ -38,12 +39,13 @@ def util_validate_user(request):
         return False, 'Exception occurred, user will not be authenticated'
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def get_user(request):
-    if request.method == 'GET':
-        posts = Userinfo.objects.all()
-        json_data = serializers.serialize('json', posts, fields=('username','password','emailID'))
-        return HttpResponse(json_data, content_type="application/json")
+    if request.method == 'POST':
+        print(request.POST)
+        server_message = CheckUser.get_user(request.POST.get('username'))
+        json_server_message = json.dumps(server_message)
+        return HttpResponse(json_server_message, content_type="application/json")
 
 @api_view(['POST'])
 def post_signup(request):
@@ -90,6 +92,33 @@ def get_bet_topics_and_info(request):
         new_dict = {'topics': [value for key, value in message_dict.items()]}
         print(new_dict)
         server_message = json.dumps(new_dict)
+        return HttpResponse(server_message, content_type="application/json")
+
+
+@api_view(['POST'])
+def post_edituserdetails(request):
+    if request.method == 'POST':
+        print("Post hit")
+        request_data = request.POST
+        print("Username", request_data.get('username'))
+        print("Password", request_data.get('password'))
+        print("Email", request_data.get('email'))
+        status, status_msg = CheckUser.check_user(request_data.get('username'), request_data.get('password'), request_data.get('email'))
+        if "error" in status:
+            new_dict = {'status': status, 'message': status_msg}
+        else:
+            status, status_msg = CheckUser.update_user(request_data.get('username'), request_data.get('password'), request_data.get('email'))
+            new_dict = {'status': status, 'message': status_msg}
+
+        server_message = json.dumps(new_dict)
+        return HttpResponse(server_message, content_type="application/json")
+
+@api_view(["GET"])
+def post_betdetails(request):
+    if request.method == 'GET':
+        new_dict = {'topic':'Hello', 'option':'No', 'amount':100}
+        my_dict = {"betdetails": [new_dict, new_dict]}
+        server_message = json.dumps(my_dict)
         return HttpResponse(server_message, content_type="application/json")
 
 
@@ -151,4 +180,5 @@ def place_a_bet(request):
         response = p.place_a_bet(request.GET['topic_id'], request.GET['username'], request.GET['option'], request.GET['amount'])
         json_data = json.dumps(response)
         return HttpResponse(json_data, content_type="application/json")
+
 
