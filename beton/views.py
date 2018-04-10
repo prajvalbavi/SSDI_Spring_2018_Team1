@@ -2,23 +2,58 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 
-from beton.models import Userinfo, Topics, BetInfo
+from beton.models import Userinfo, Topics, BetInfo, Bets
 from beton.serializers import PostSerializer
 from rest_framework.renderers import JSONRenderer
 from django.core import serializers
 import json
 from beton.BusinessLayer.SignupUser import SignupUser
 from beton.BusinessLayer.GetPublicTopics import BetInformation
+
+from django.core import serializers
+from django.http import HttpResponse
+
+from beton.BusinessLayer.AuthenticateUser import Authenticate
+from beton.BusinessLayer.ValidateUser import Validate
+
+from rest_framework.authentication import get_authorization_header
+from rest_framework.decorators import api_view
+
+from beton.BusinessLayer.AuthenticateUser import Authenticate
+from beton.BusinessLayer.GetBetDetails import BetDetails
+from beton.BusinessLayer.GetPublicTopics import BetInformation
+from beton.BusinessLayer.PlaceABet import PlaceABet
+from beton.BusinessLayer.SignupUser import SignupUser
+from beton.BusinessLayer.ValidateUser import Validate
+from beton.models import Userinfo, Topics, BetInfo
+from beton.BusinessLayer.CheckUser import  CheckUser
+from beton.BusinessLayer.UserBetDetails import UserBetDetials
 # Create your views here.
 
+#Checks token is valid and if username or email matches with decoded name in token.
+def util_validate_user(request):
+    try:
+        auth = get_authorization_header(request)
+        auth = auth.decode('utf-8')
+
+        print(auth)
+        if auth:
+            is_valid_user, message = Validate.is_user_valid(auth)
+            return is_valid_user, message
+        else:
+            return False, 'Header not found, user will not be authenticated.'
+    except Exception:
+        return False, 'Exception occurred, user will not be authenticated'
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def get_user(request):
-    if request.method == 'GET':
-        posts = Userinfo.objects.all()
-        json_data = serializers.serialize('json', posts, fields=('username','password','emailID'))
-        return HttpResponse(json_data, content_type="application/json")
+    if request.method == 'POST':
+        print(request.POST)
+        server_message = CheckUser.get_user(request.POST.get('username'))
+        json_server_message = json.dumps(server_message)
+        return HttpResponse(json_server_message, content_type="application/json")
+
 
 @api_view(['POST'])
 def post_signup(request):
@@ -66,3 +101,108 @@ def get_bet_topics_and_info(request):
         print(new_dict)
         server_message = json.dumps(new_dict)
         return HttpResponse(server_message, content_type="application/json")
+
+
+@api_view(['POST'])
+def post_edituserdetails(request):
+    if request.method == 'POST':
+        print("Post hit")
+        is_valid_user, message = util_validate_user(request)
+        if is_valid_user:
+            request_data = request.POST
+            print("Username", request_data.get('username'))
+            print("Password", request_data.get('password'))
+            print("Email", request_data.get('email'))
+            status, status_msg = CheckUser.check_user(request_data.get('username'), request_data.get('password'), request_data.get('email'))
+            if "error" in status:
+                new_dict = {'status': status, 'message': status_msg}
+            else:
+                status, status_msg = CheckUser.update_user(request_data.get('username'), request_data.get('password'), request_data.get('email'))
+                new_dict = {'status': status, 'message': status_msg}
+        else:
+            new_dict = {'status': "error", 'message': message}
+
+        server_message = json.dumps(new_dict)
+        return HttpResponse(server_message, content_type="application/json")
+
+@api_view(["POST"])
+def post_user_betdetails(request):
+    if request.method == 'POST':
+        print("POST hit for user_betdetails")
+        print("Validate user")
+        is_valid_user, message = util_validate_user(request)
+        if is_valid_user:
+            status, betlist = UserBetDetials.get_peruser_bets(request.POST.get('username'))
+            if len(betlist) > 0:
+                #_betdetails = [_b for _b in betlist.values()]
+                print(betlist)
+                _betdetails = betlist
+            else:
+                _betdetails = []
+            server_message = json.dumps({'status': status, 'user_bets_info': _betdetails})
+        else:
+            status = "error"
+            server_message = json.dumps({'status':status, 'message': message})
+
+        return HttpResponse(server_message, content_type="application/json")
+
+
+
+@api_view(['POST'])
+def auth_user(request):
+    if request.method == 'POST':
+
+        post_request = request.POST
+        identifier = post_request.get('identifier')
+        password  = post_request.get('password')
+        print ('identifier:' , identifier)
+        print (password)
+        result, message, uname = Authenticate.authenticate_user(identifier,password)
+
+        if result:
+            print("is valid user", util_validate_user(request))
+            payload_data = {"username": uname}
+
+            token = Authenticate.generate_token(payload_data)
+            token = token.decode('utf-8')
+            jwt_token = {'token': token}
+            print (json.dumps(jwt_token))
+            return HttpResponse(json.dumps(jwt_token), content_type="application/json")
+        else:
+            error_message = {'errors':{'form' : message}}
+            error_message = json.dumps(error_message)
+            print (error_message)
+            return HttpResponse(error_message, content_type="application/json", status=401)
+
+
+@api_view(['POST'])
+def validate_user(request):
+    if request.method == 'POST':
+        print("Received request to validate_user", request.method)
+        is_valid_user, message = util_validate_user(request)
+        json_reply = {'isValid': is_valid_user}
+        print ("Validate_user response message" , json_reply)
+        json_reply = json.dumps(json_reply)
+        status_ = 200 if is_valid_user else 401
+        print ('*status*', status_)
+        return HttpResponse(json_reply, content_type="application/json", status = status_)
+
+
+@api_view(['GET'])
+def get_bet_details(request):
+    if request.method == 'GET':
+        b = BetDetails()
+        options = b.get_bet_details(request.GET['topic_id'])
+        json_data = json.dumps(options)
+        return HttpResponse(json_data, content_type="application/json")
+
+
+@api_view(['GET'])
+def place_a_bet(request):
+    if request.method == 'GET':
+        p = PlaceABet()
+        response = p.place_a_bet(request.GET['topic_id'], request.GET['username'], request.GET['option'], request.GET['amount'])
+        json_data = json.dumps(response)
+        return HttpResponse(json_data, content_type="application/json")
+
+

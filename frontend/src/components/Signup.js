@@ -89,7 +89,11 @@ class Signup extends Component{
     .then(function (response) {
         console.log();
         if (response.data.status === 'success'){
-          that.props.history.push("/welcome");
+          that.props.history.push({
+            pathname:"/login"
+            /*state: { detail: response.data.username}});*/
+            /*state: { detail: "Prajval"}});*/
+          });
         } else {
           if (response.data.message.includes('Username')){
             that.setState(() => {
@@ -111,7 +115,7 @@ class Signup extends Component{
 
     })
     .catch(function (response) {
-        console.log(response);
+        console.log("Server Error");
     });
   }
   };

@@ -2,9 +2,15 @@ from django.test import TestCase
 from beton.BusinessLayer.SignupUser import SignupUser as su
 from beton.BusinessLayer.GetPublicTopics import BetInformation
 from beton.models import Userinfo, Topics, BetInfo
+from django.test import Client
+from beton.BusinessLayer.ValidateUser import Validate
+from beton.BusinessLayer.AuthenticateUser import Authenticate
+import jwt
+
 import requests
 
 class TestSignUp(TestCase):
+
     def test_valid_signup(self):
         response , message = su.signup("apurva", "Welcome@2018", "apurva@gmail.com")
         self.assertEqual(response,"success")
@@ -78,14 +84,16 @@ class TestApplicationMethods(TestCase):
 
     def test_email_in_team(self):
         signup = SignupAPI()
-        server_response = signup.post_signup_present("prajval1", "pbavi1@uncc.edu", "Welcome123")
-        self.assertTrue(server_response['message'] == "Username already exists")
+        Userinfo.objects.create(username="prajval1", password="Welcome123", emailID="pbavi1@uncc.edu")
+        server_response = signup.post_signup_present("prajval11", "pbavi1@uncc.edu", "Welcome123")
+        self.assertTrue(server_response['message'] == "Email already exists")
         self.assertTrue(server_response['status'] == "error")
 
     def test_user_in_team(self):
         signup = SignupAPI()
-        server_response = signup.post_signup_present("prajval1221", "pbavi962@uncc.edu", "Welcome123")
-        self.assertTrue(server_response['message'] == "Email already exists")
+        Userinfo.objects.create(username="prajval12", password="Welcome123", emailID="pbavi962@uncc.edu")
+        server_response = signup.post_signup_present("prajval12", "pbavi9621@uncc.edu", "Welcome123")
+        self.assertTrue(server_response['message'] == "Username already exists")
         self.assertTrue(server_response['status'] == "error")
 
     def test_new_user(self):
@@ -93,3 +101,17 @@ class TestApplicationMethods(TestCase):
         server_response = signup.post_signup_new("prajval1212", "pbavi9292@uncc.edu", "Welcome123")
         self.assertTrue(server_response['message'] == "User added successfully")
         self.assertTrue(server_response['status'] == "success")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
