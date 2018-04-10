@@ -18,7 +18,7 @@ from rest_framework.authentication import get_authorization_header
 from beton.BusinessLayer.GetBetDetails import BetDetails
 from beton.BusinessLayer.PlaceABet import PlaceABet
 from beton.BusinessLayer.CheckUser import  CheckUser
-
+from beton.BusinessLayer.UserBetDetails import UserBetDetials
 # Create your views here.
 
 #Checks token is valid and if username or email matches with decoded name in token.
@@ -26,8 +26,10 @@ def util_validate_user(request):
     try:
         auth = get_authorization_header(request)
         auth = auth.decode('utf-8')
-
-        print(auth)
+        if "Bearer" in auth:
+            auth = auth.split(" ")[1]
+            print("Bearer in auth, so stripping it", auth)
+        print("Final bearer", auth)
         is_valid_user = False
         message = ''
         if auth:
@@ -99,26 +101,42 @@ def get_bet_topics_and_info(request):
 def post_edituserdetails(request):
     if request.method == 'POST':
         print("Post hit")
-        request_data = request.POST
-        print("Username", request_data.get('username'))
-        print("Password", request_data.get('password'))
-        print("Email", request_data.get('email'))
-        status, status_msg = CheckUser.check_user(request_data.get('username'), request_data.get('password'), request_data.get('email'))
-        if "error" in status:
-            new_dict = {'status': status, 'message': status_msg}
+        is_valid_user, message = util_validate_user(request)
+        if is_valid_user:
+            request_data = request.POST
+            print("Username", request_data.get('username'))
+            print("Password", request_data.get('password'))
+            print("Email", request_data.get('email'))
+            status, status_msg = CheckUser.check_user(request_data.get('username'), request_data.get('password'), request_data.get('email'))
+            if "error" in status:
+                new_dict = {'status': status, 'message': status_msg}
+            else:
+                status, status_msg = CheckUser.update_user(request_data.get('username'), request_data.get('password'), request_data.get('email'))
+                new_dict = {'status': status, 'message': status_msg}
         else:
-            status, status_msg = CheckUser.update_user(request_data.get('username'), request_data.get('password'), request_data.get('email'))
-            new_dict = {'status': status, 'message': status_msg}
+            new_dict = {'status': "error", 'message': message}
 
         server_message = json.dumps(new_dict)
         return HttpResponse(server_message, content_type="application/json")
 
-@api_view(["GET"])
-def post_betdetails(request):
-    if request.method == 'GET':
-        new_dict = {'topic':'Hello', 'option':'No', 'amount':100}
-        my_dict = {"betdetails": [new_dict, new_dict]}
-        server_message = json.dumps(my_dict)
+@api_view(["POST"])
+def post_user_betdetails(request):
+    if request.method == 'POST':
+        print("POST hit for user_betdetails")
+        print("Validate user")
+        is_valid_user, message = util_validate_user(request)
+        if is_valid_user:
+            status, betlist = UserBetDetials.get_peruser_bets(request.POST.get('username'))
+            if len(betlist) > 0:
+                _betdetails = [_b for _b in betlist.values()]
+                print(_betdetails)
+            else:
+                _betdetails = []
+            server_message = json.dumps({'status': status, 'user_bets_info': _betdetails})
+        else:
+            status = "error"
+            server_message = json.dumps({'status':status, 'message': message})
+
         return HttpResponse(server_message, content_type="application/json")
 
 
@@ -132,7 +150,7 @@ def auth_user(request):
         password  = post_request.get('password')
         print (username)
         print (password)
-        result, message = Authenticate.authenticate_user(username,password)\
+        result, message = Authenticate.authenticate_user(username,password)
 
         if result:
             print("is valid user", util_validate_user(request))

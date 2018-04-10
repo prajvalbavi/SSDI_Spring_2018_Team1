@@ -38,7 +38,7 @@ class SimpleTabs extends React.Component {
     state = {
         value: 0,
         valid_user: false,
-        validated: false
+        validated: false,
     };
 
     componentDidMount(){
@@ -76,8 +76,9 @@ class SimpleTabs extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { value } = this.state.value;
+        const { value } = this.state;
         console.log('render', this.state)
+        console.log('value', this.state.value)
         if(this.state.validated && !this.state.valid_user){
             console.log("routing to login")
             this.context.router.history.push("/login")
@@ -98,7 +99,7 @@ class SimpleTabs extends React.Component {
         return (
 
             <div>
-                <HeaderWelcome/>
+                <HeaderWelcome username={localStorage.getItem('username')}/>
                 <div className={classes.root}>
                     <AppBar position="static">
                         <Tabs value={value} onChange={this.handleChange}>

@@ -7,6 +7,9 @@ class CheckUser:
         obj =  Userinfo.objects.get(username=username.lower())
         if obj.password != password:
             return "error", "Password incorrect"
+        else:
+            if obj.emailID == email:
+                return "error", "Previous email same as new"
         return "success", "Password correct"
 
     @staticmethod

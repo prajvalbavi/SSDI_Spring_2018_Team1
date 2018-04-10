@@ -82,7 +82,7 @@ class LoginForm extends React.Component {
             //     (res) => this.context.router.push('/'),
             //     (err) => this.setState({errors: err.response.data.errors, isLoading: false})
             // );
-
+            let that = this;
             axios({
                 method: 'post',
                 url: 'http://localhost:8000/api/v1/auth/',
@@ -94,6 +94,8 @@ class LoginForm extends React.Component {
                     const token  =  response.data.token;
                     console.log("had_success", token);
                     localStorage.setItem('jwtToken',token);
+                    localStorage.setItem('username', that.state.identifier);
+                    console.log(that.state.identifier);
                     setAuthorization(token)
                     this.setState({isLoading: false, createdToken: true});
                     //_response = response

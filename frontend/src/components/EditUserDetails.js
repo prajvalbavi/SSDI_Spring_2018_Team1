@@ -5,7 +5,7 @@ import Button from 'material-ui/Button';
 import validator from 'validator';
 import axios from 'axios';
 import HeaderWelcome from './HeaderWelcome.js'
-
+import setAuthorization from './setAuthorizationToken'
 
 class Signup extends Component{
   state = {
@@ -17,10 +17,36 @@ class Signup extends Component{
     responsePasswordError: undefined,
     responseServerError: undefined,
     responseUpdateSuccess: undefined,
+    _user_response_username: '',
+    _user_response_email: '',
   }
 
   componentDidMount(){
-    
+    const _username = localStorage.getItem('username');
+    const _token = localStorage.getItem('jwtToken');
+    setAuthorization(_token)
+    var bodyFormData = new FormData();
+    bodyFormData.set('username', _username);
+    axios({
+        method: 'post',
+        url: 'http://localhost:8000/api/v1/user/',
+        data: bodyFormData,
+        config: { headers: {'Content-Type': 'multipart/form-data' }}
+    }).then(
+        (response) => {
+          console.log("username stored", localStorage.getItem('username'));
+          console.log("response recieved", response.data);
+          this.setState(() => {
+            return {_user_response_username: response.data.username,
+                    _user_response_email: response.data.email};
+          })
+        }
+    ).catch(
+        (error) => {
+            console.log("had_exception");
+      }
+
+    )
   }
 
   handlePasswordError = (passwordValue) => {
@@ -36,7 +62,7 @@ class Signup extends Component{
           && this.state.passwordMismatchError)
   }
 
-  handleSignUp = (e) => {
+  handleEditDetails = (e) => {
     let finalCheck = true;
     e.preventDefault();
 
@@ -87,6 +113,8 @@ class Signup extends Component{
     bodyFormData.set('username', signupinfo.username);
     bodyFormData.append('password', signupinfo.password);
     bodyFormData.append('email', signupinfo.email);
+    const _token = localStorage.getItem('jwtToken');
+    setAuthorization(_token)
     let that = this;
     axios({
     method: 'post',
@@ -107,30 +135,33 @@ class Signup extends Component{
           } else {
           if (response.data.message.includes('Password')){
             that.setState(() => {
-              return { responsePasswordError: true };
+              return { responsePasswordError: true,
+                       responseUsernameError: false,
+                       responseEmailError: false,
+                       responseServerError: false };
             });
+
+          } else if (response.data.message.includes('email')) {
             that.setState(() => {
-              return {responseUsernameError: false};
-            });
-            that.setState(() => {
-              return { responseEmailError: false };
-            });
-            that.setState(() => {
-              return {responseServerError: false};
+              return { responsePasswordError: false,
+                       responseEmailError: true,
+                       responseUsernameError: false,
+                       responseServerError: false,
+                     };
             });
           } else if (response.data.message.includes('Exception')) {
             that.setState(() => {
-              return { responsePasswordError: false };
+              return { responsePasswordError: false,
+                       responseEmailError: false,
+                       responseUsernameError: false,
+                       responseServerError: true};
             });
-            that.setState(() => {
-              return { responseEmailError: false };
-            });
-            that.setState(() => {
-              return { responseUsernameError: false };
-            });
-            that.setState(() => {
-              return {responseServerError: true};
-            });
+
+          } else if (response.data.message.includes("Invalid")){
+            console.log("EditUserDetails.js Invalid user")
+            that.props.history.push({
+              pathname:"/login",
+              });
           }
 
         }
@@ -141,19 +172,31 @@ class Signup extends Component{
     });
   }
   };
+
+  handleChange = name => event => {
+    this.setState({
+      _user_response_email: event.target.value,
+    });
+  };
+
+
   render(){
+    console.log("inside render", this.state._user_response_username);
+    console.log("inside render", this.state._user_response_email);
+    console.log("type of email", typeof(this.state._user_response_email))
+    const _email = this.state._user_response_email
     return(
       <div>
-      <HeaderWelcome/>
+      <HeaderWelcome username={this.state._user_response_username}/>
       <button size="large" className="big-button">Update Profile</button>
-      <form onSubmit={this.handleSignUp}>
+      <form onSubmit={this.handleEditDetails}>
         <div>
-          <TextField defaultValue = "Prajval" disabled={true} id="username" label="Username" margin="normal" />
+          <TextField value={this.state._user_response_username} disabled={true} id="username" label="Username" margin="normal" />
         </div>
 
         <div>
-        {this.state.emailError || this.state.responseEmailError ? <TextField required helperText="Email Invalid/Exists" id="email" label="Email" error/> :
-          <TextField defaultValue="prajval@gmail.com" required id="email" label="Email"/>}
+        {this.state.emailError || this.state.responseEmailError ? <TextField value={_email} onChange={this.handleChange('email')} required helperText="Email Invalid/Exists" id="email" label="Email" error/> :
+          <TextField value={_email} required id="email" label="Email" onChange={this.handleChange('email')}/>}
         </div>
 
         <div>
