@@ -103,8 +103,8 @@ class TestApplicationMethods(TestCase):
         self.assertTrue(server_response['status'] == "success")
 
 
- def get_dict_from_response(response):
-        return response.json()
+def get_dict_from_response(response):
+    return response.json()
 
 
 class TestLogin(TestCase):
@@ -270,36 +270,36 @@ class TestAuthenticate(TestCase):
     def test_authenticate_user_with_valid_username(self):
         flag, message, uname = Authenticate.authenticate_user(self.user.username, self.user.password)
         self.assertTrue(flag == True)
-        self.assertTrue(message = "User Authenticated")
+        self.assertTrue(message == "User Authenticated")
         self.assertTrue(uname == self.user.username)
 
     def test_authenticate_user_with_valid_email(self):
         flag, message, uname = Authenticate.authenticate_user(self.user.emailID, self.user.password)
         self.assertTrue(flag == True)
-        self.assertTrue(message = "User Authenticated")
+        self.assertTrue(message == "User Authenticated")
         self.assertTrue(uname == self.user.username)
 
     def test_authenticate_user_with_invalid_username(self):
         flag, message, uname = Authenticate.authenticate_user("Nikhil567", self.user.password)
         self.assertTrue(flag == False)
-        self.assertTrue(message = "Invalid Credentials")
+        self.assertTrue(message == "Invalid Credentials")
         self.assertTrue(uname == '')
 
     def test_authenticate_user_with_invalid_email(self):
         flag, message, uname= Authenticate.authenticate_user("Nikhil910@gmail.com", self.user.password)
         self.assertTrue(flag == False)
-        self.assertTrue(message = "Invalid Credentials")
+        self.assertTrue(message == "Invalid Credentials")
         self.assertTrue(uname == '')
 
     def test_authenticate_user_with_invalid_password(self):
         flag, message, flag,uname = Authenticate.authenticate_user(self.user.username, "Nikhilabc")
         self.assertTrue(flag == False)
-        self.assertTrue(message = "Invalid Credentials")
+        self.assertTrue(message == "Invalid Credentials")
         self.assertTrue(uname == '')
 
         flag, message, uname = Authenticate.authenticate_user(self.user.emailID, "Nikhilabc")
         self.assertTrue(flag == False)
-        self.assertTrue(message="Invalid Credentials")
+        self.assertTrue(message=="Invalid Credentials")
         self.assertTrue(uname == '')
 
     def test_generate_token_valid_payload(self):
