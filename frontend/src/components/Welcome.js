@@ -6,8 +6,10 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
 import ListDisplay from '../components/ListDisplay.js'
 import HeaderWelcome from '../components/HeaderWelcome.js'
+
 import setAuthorizationToken from "./setAuthorizationToken";
 import axios from "axios/index";
+import BetDetails from '../components/BetDetails.js'
 
 
 function TabContainer(props) {
@@ -43,7 +45,6 @@ class SimpleTabs extends React.Component {
         if (!this.state.validated) {
             this.PerformValidation()
         }
-
 
     }
 
@@ -103,13 +104,13 @@ class SimpleTabs extends React.Component {
                         <Tabs value={value} onChange={this.handleChange}>
                             <Tab label="Public" />
                             <Tab label="Private" />
-                            <Tab label="Request"/>
+                            <Tab label="My Bets"/>
                             <Tab label="Balance"/>
                         </Tabs>
                     </AppBar>
                     {value === 0 && this.state.valid_user && <ListDisplay/>}
                     {value === 1 && <TabContainer>Not in Sprint 1</TabContainer>}
-                    {value === 2 && <TabContainer>Not in Sprint 1</TabContainer>}
+                    {value === 2 &&  && <BetDetails/>}
                     {value === 3 && <TabContainer>Not in Sprint 1</TabContainer>}
                 </div>
             </div>

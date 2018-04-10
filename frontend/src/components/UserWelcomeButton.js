@@ -6,9 +6,11 @@ import Button from 'material-ui/Button';
 const UserWelcomeButton = (username) => {
   return (
     <div>
-      <Button variant="raised" color="secondary" >
+      <Link to="/edituserdetails">
+      <Button variant="raised" color="secondary">
       {username.username}
       </Button>
+      </Link>
     </div>
   )
 }
