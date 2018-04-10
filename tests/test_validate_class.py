@@ -15,7 +15,8 @@ class TestValidate(TestCase):
 
 
     def test_is_user_valid_with_missing_token(self):
-        flag, message = Validate.is_user_valid()
+        token = None
+        flag, message = Validate.is_user_valid(token)
         self.assertTrue(flag == False)
         self.assertTrue(message == 'Missing Token')
 
