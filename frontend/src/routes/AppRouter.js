@@ -6,7 +6,8 @@ import Login from "../components/Login.js"; //future for login
 import Welcome from "../components/Welcome.js"; //When user login
 import Signup from "../components/Signup.js"; //Signup page
 import NotFound from "../components/NotFound.js";
-import LandingPage from "../components/LandingPage.js"; //landing page
+import LandingPage from "../components/LandingPage.js";
+import ListDisplay from "../components/ListDisplay"; //landing page
 import EditUserDetails from "../components/EditUserDetails.js" //EditUserDetails
 
 
