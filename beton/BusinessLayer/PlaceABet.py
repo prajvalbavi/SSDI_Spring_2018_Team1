@@ -11,6 +11,10 @@ class PlaceABet:
 
     def place_a_bet(self, topic_id, username, option, amount):
         try:
+            if (option == 'notselected'):
+                return "Please select an Option"
+            if(int(amount) <= 0):
+                return "Invalid Amount"
             tpcid = Topics.objects.get(topic_id= topic_id)
             user = Userinfo.objects.get(username= username)
             Bets.objects.create(topic_id_id = tpcid.topic_id, username_id = user,option = option, amount = amount)
@@ -26,3 +30,5 @@ class PlaceABet:
         except ObjectDoesNotExist as e:
             # raise e
             return "Invalid topic id/Username"
+        except ValueError as e:
+            return "Invalid Amount"
