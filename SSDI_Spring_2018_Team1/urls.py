@@ -26,9 +26,8 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.views.generic import TemplateView
-
 from beton.views import post_signup, get_user, get_topics, get_betinfo, get_bet_topics_and_info, get_bet_details, place_a_bet,auth_user, validate_user
-
+from beton.views import post_edituserdetails, post_betdetails
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -38,6 +37,8 @@ urlpatterns = [
     url(r'^api/v1/topic/$', get_topics, name='get_topics'),
     url(r'^api/v1/betinfo/$', get_betinfo, name='get_betinfo'),
     url(r'^api/v1/topicsandinfo/$', get_bet_topics_and_info, name='get_bet_topics_and_info'),
+    url(r'^api/v1/edituserdetails/', post_edituserdetails, name='post_edituserdetails'),
+    url(r'^api/v1/betdetails/', post_betdetails, name='post_betdetails'),
 
     url(r'^api/v1/auth/', auth_user, name='auth_user'),
     url(r'^api/v1/validuser/', validate_user, name='validate_user'),

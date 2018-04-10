@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import validator from 'validator';
 import axios from 'axios';
-import HeaderSignup from './HeaderSignup.js'
+import HeaderWelcome from './HeaderWelcome.js'
 
 
 class Signup extends Component{
@@ -13,7 +13,10 @@ class Signup extends Component{
     passwordError: undefined,
     passwordMismatchError: undefined,
     responseUsernameError: undefined,
-    responseEmailError: undefined
+    responseEmailError: undefined,
+    responsePasswordError: undefined,
+    responseServerError: undefined,
+    responseUpdateSuccess: undefined,
   }
 
   handlePasswordError = (passwordValue) => {
@@ -82,31 +85,46 @@ class Signup extends Component{
     let that = this;
     axios({
     method: 'post',
-    url: 'http://localhost:8000/api/v1/signup/',
+    url: 'http://localhost:8000/api/v1/edituserdetails/',
     data: bodyFormData,
     config: { headers: {'Content-Type': 'multipart/form-data' }}
     })
     .then(function (response) {
-        console.log();
+        console.log(response);
         if (response.data.status === 'success'){
-          that.props.history.push({
-            pathname:"/welcome",
-            state: { detail: response.data.username}});
-            /*state: { detail: "Prajval"}});*/
-        } else {
-          if (response.data.message.includes('Username')){
+          that.setState(() => {
+            return {responseUpdateSuccess: true};
+          })
+        that.props.history.push({
+          pathname:"/welcome",
+          /*state: { detail: response.data.username}});*/
+          });
+          } else {
+          if (response.data.message.includes('Password')){
             that.setState(() => {
-              return { responseUsernameError: true };
+              return { responsePasswordError: true };
+            });
+            that.setState(() => {
+              return {responseUsernameError: false};
             });
             that.setState(() => {
               return { responseEmailError: false };
             });
-          } else if (response.data.message.includes('Email')) {
             that.setState(() => {
-              return { responseEmailError: true };
+              return {responseServerError: false};
             });
-              that.setState(() => {
+          } else if (response.data.message.includes('Exception')) {
+            that.setState(() => {
+              return { responsePasswordError: false };
+            });
+            that.setState(() => {
+              return { responseEmailError: false };
+            });
+            that.setState(() => {
               return { responseUsernameError: false };
+            });
+            that.setState(() => {
+              return {responseServerError: true};
             });
           }
 
@@ -121,35 +139,38 @@ class Signup extends Component{
   render(){
     return(
       <div>
-      <HeaderSignup/>
-      <button size="large" className="big-button">Welcome to Beton</button>
+      <HeaderWelcome/>
+      <button size="large" className="big-button">Update Profile</button>
       <form onSubmit={this.handleSignUp}>
         <div>
-        {this.state.responseUsernameError ? <TextField required error helperText="User already exists" id="username" label="Username" margin="normal" /> :
-          <TextField required id="username" label="Username" margin="normal" />}
+          <TextField defaultValue = "Prajval" disabled={true} id="username" label="Username" margin="normal" />
         </div>
 
         <div>
         {this.state.emailError || this.state.responseEmailError ? <TextField required helperText="Email Invalid/Exists" id="email" label="Email" error/> :
-          <TextField required id="email" label="Email"/>}
+          <TextField defaultValue="prajval@gmail.com" required id="email" label="Email"/>}
         </div>
 
-        <div>{
-        this.state.passwordError ? <TextField required error helperText="Password format error" id="password" type="password" label="Password" margin="normal"/> :
-        <TextField required id="password" type="password" label="Password" margin="normal"/>
+        <div>
+        {this.state.passwordError || this.state.responsePasswordError ? <TextField required error helperText="Password format error" id="password" type="password" label="Password" margin="normal"/> :
+        <TextField id="password" required type="password" label="Password" margin="normal"/>
         }
         </div>
 
         <div>
         {this.state.passwordMismatchError ?
         <TextField required error helperText="Password Mismatch" id="confirmPassword" type="password" label="Confirm Password" margin="normal" /> :
-        <TextField required id="confirmPassword" type="password" label="Confirm Password" margin="normal" /> }
+        <TextField id="confirmPassword" required type="password" label="Confirm Password" margin="normal" /> }
         </div>
 
         <div>
-        <button className="button">
-        Signup
+        <button className="button-update">
+        Update
         </button>
+        </div>
+        <div>
+        {this.state.responsePasswordError ? "Password Wrong, Please enter correct password" : ""}
+        {this.state.responseUpdateSuccess ? "Successfully updated user info": ""}
         </div>
 
       </form>

@@ -8,6 +8,7 @@ import Signup from "../components/Signup.js"; //Signup page
 import NotFound from "../components/NotFound.js";
 import LandingPage from "../components/LandingPage.js";
 import ListDisplay from "../components/ListDisplay"; //landing page
+import EditUserDetails from "../components/EditUserDetails.js" //EditUserDetails
 
 
 const AppRouter = () => (
@@ -18,6 +19,7 @@ const AppRouter = () => (
         <Route path="/login" component={Login}/>
         <Route path="/welcome" component={Welcome}/>
         <Route path="/signup" component={Signup}/>
+        <Route path="/edituserdetails" component={EditUserDetails}/>
         <Route component={NotFound}/>
       </Switch>
       <Footer/>
