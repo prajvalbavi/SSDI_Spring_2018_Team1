@@ -14,12 +14,13 @@ from beton.BusinessLayer.CheckUser import  CheckUser
 
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def get_user(request):
-    if request.method == 'GET':
-        posts = Userinfo.objects.all()
-        json_data = serializers.serialize('json', posts, fields=('username','password','emailID'))
-        return HttpResponse(json_data, content_type="application/json")
+    if request.method == 'POST':
+        print(request.POST)
+        server_message = CheckUser.get_user(request.POST.get('username'))
+        json_server_message = json.dumps(server_message)
+        return HttpResponse(json_server_message, content_type="application/json")
 
 @api_view(['POST'])
 def post_signup(request):

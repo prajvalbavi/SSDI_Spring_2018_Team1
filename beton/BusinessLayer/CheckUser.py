@@ -19,3 +19,12 @@ class CheckUser:
         except Exception as e:
             return "exception", str(e)
 
+
+    @staticmethod
+    def get_user(username):
+        print(username)
+        try:
+            obj = Userinfo.objects.get(username=username.lower())
+            return {"status": "success" , "username" : obj.username, "email": obj.emailID }
+        except Exception as e:
+            return {"status": "exception", "message" : str(e)}
