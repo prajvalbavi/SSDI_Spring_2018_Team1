@@ -11,8 +11,9 @@ import TextField from 'material-ui/TextField';
 class SimpleDialog1 extends React.Component {
     state = {
     option_info: [],
-    value : ' ',
+    value : 'notselected',
     amount : 0,
+    message: undefined
     };
    handleChange = event => {
     this.setState({ value: event.target.value });
@@ -20,16 +21,25 @@ class SimpleDialog1 extends React.Component {
 
 
    handlePlaceABet = event => {
-    console.log(event)
-    this.setState({ value: event.target.value });
-    this.setState({ amount: event.target.amount });
-    console.log(this.state.value);
-    console.log(this.state.amount)
+    event.preventDefault();
+    this.setState({ amount: event.target.amount.value });
+     const api1 = 'http://localhost:8000/api/v1/placebet/?topic_id=';
+     const tpcid = this.props.topic_id;
+     const api2 = '&username=';
+     const username = 'apurva';
+     const api3 = '&option=';
+     const option = this.state.value;
+     const api4 = '&amount=';
+     const amount = this.state.amount;
+       axios.get(api1+tpcid+api2+username+api3+option+api4+amount)
+       .then(res => {
+           this.setState({ message: res.data });
+       })
   };
 
-  componentDidMount() {
+  optiondetails() {
       const api = 'http://localhost:8000/api/v1/betdetails/?topic_id=';
-      const tpcid = '1';
+      const tpcid = this.props.topic_id;
       axios.get(api+tpcid)
       .then(res => {
           const topics_info = JSON.parse(JSON.stringify(res.data));
@@ -38,9 +48,10 @@ class SimpleDialog1 extends React.Component {
   }
   render() {
     const { value, amount, topic_id, option_info, ...other } = this.props;
+    this.optiondetails();
     return (
       <Dialog aria-labelledby="simple-dialog-place-a-bet"{...other}>
-        <DialogTitle id="simple-dialog-place-a-bet">Place Bet for {topic_id}</DialogTitle>
+        <DialogTitle id="simple-dialog-place-a-bet">Place Bet for {topic_id} by User {topic_id.split(',')[1]}</DialogTitle>
         <div>
             <form onSubmit={this.handlePlaceABet}>
               <div>
@@ -55,10 +66,11 @@ class SimpleDialog1 extends React.Component {
                     <TextField required id="amount" label="Enter Amount to Bet" margin="normal" />
               </div>
               <div>
-                   <button className="button" style={{width: 150}}>
+                   <button className="button" style={{width: 150, backgroundColor: "#008000"}}>
                     Place The Bet
                     </button>
               </div>
+                <font color="red">{this.state.message}</font>
             </form>
       </div>
       </Dialog>

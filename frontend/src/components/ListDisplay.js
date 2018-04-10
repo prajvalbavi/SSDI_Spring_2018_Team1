@@ -36,12 +36,8 @@ const styles = theme => ({
         marginRight: 10
     }
 });
-
 const SimpleDialogWrapped1 =(SimpleDialog1);
 const SimpleDialogWrapped2 =(SimpleDialog2);
-
-
-
 class SimpleTable extends Component{
   state = {
     topics: [],
@@ -49,21 +45,20 @@ class SimpleTable extends Component{
     bet_info: {},
     open1: false,
     open2: false,
-    topic_id : "1",
+    topic_id : "2",
+    message: undefined
   }
     handleClickOpen2 = (e) => {
-    //console.log(e.target.id);
     this.setState({
     open2: true,
     topic_id : e.target.id
     })
   };
     handleClickOpen1 = (e) => {
-    //console.log(e.target.id);
     this.setState({
     open1: true,
-    topic_id : e.target.id
-    })
+    topic_id : e.target.id,
+    });
   };
     handleClose1 = value => {
     this.setState({ open1: false });
@@ -92,7 +87,7 @@ class SimpleTable extends Component{
                         <div>Total Users: {n.total_users}</div>
                         <div>Total Amount: {n.total_amount}</div>
                         </Paper>
-                      <button id = {n.topic_id + n.topic_id} onClick = {(e) => this.handleClickOpen1(e)}>Place A Bet</button>
+                      <button id = {n.topic_id} onClick = {(e) => this.handleClickOpen1(e)}>Place A Bet</button>
                         <SimpleDialogWrapped1
                           open={this.state.open1}
                           onClose={this.handleClose1}

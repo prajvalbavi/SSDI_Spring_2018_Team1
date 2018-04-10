@@ -10,18 +10,19 @@ class SimpleDialog1 extends React.Component {
     option_info: [],
     };
 
-  componentDidMount() {
+  optiondetails() {
       const api = 'http://localhost:8000/api/v1/betdetails/?topic_id=';
-      const tpcid = '1';
+      const tpcid = this.props.topic_id;
       axios.get(api+tpcid)
       .then(res => {
-
         const topics_info = JSON.parse(JSON.stringify(res.data));
         this.setState({ option_info: topics_info });
       })
   }
+
   render() {
     const { topic_id, option_info, ...other } = this.props;
+    this.optiondetails();
     return (
       <Dialog aria-labelledby="simple-dialog-get-bet-details" {...other}>
         <DialogTitle id="simple-dialog-get-bet-details">Topic Details for {topic_id}</DialogTitle>
