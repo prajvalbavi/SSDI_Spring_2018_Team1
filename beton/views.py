@@ -2,7 +2,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 
-from beton.models import Userinfo, Topics, BetInfo, Bets
+from beton.models import Userinfo, Topics, BetInfo
 from beton.serializers import PostSerializer
 from rest_framework.renderers import JSONRenderer
 from django.core import serializers
@@ -99,15 +99,15 @@ def auth_user(request):
     if request.method == 'POST':
 
         post_request = request.POST
-        username = post_request.get('username')
+        identifier = post_request.get('identifier')
         password  = post_request.get('password')
-        print (username)
+        print ('identifier:' , identifier)
         print (password)
-        result, message = Authenticate.authenticate_user(username,password)\
+        result, message = Authenticate.authenticate_user(identifier,password)
 
         if result:
             print("is valid user", util_validate_user(request))
-            payload_data = {"username": username}
+            payload_data = {"identifier": identifier}
             print (payload_data)
             token = Authenticate.generate_token(payload_data)
             token = token.decode('utf-8')

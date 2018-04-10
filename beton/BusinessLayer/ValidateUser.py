@@ -17,16 +17,17 @@ class Validate:
 
     @staticmethod
     def is_user_valid(token):
-        print ("is_user_valid", token)
+        if token is None or token == '':
+            return False, 'Missing Token'
+
         result, pay_load = Validate.unpack_token(token)
         if result:
-            name = pay_load['username']
+            name = pay_load['identifier']
         else:
-            return False, 'Signature verification failed, user is not authenticated.'
+            return False, 'Invalid User'
 
 
         try:
-            print("valid_user")
             Userinfo.objects.get(Q(username=name.lower()) | Q(emailID=name.lower()))
             return True, "Valid User"
         except ObjectDoesNotExist:
