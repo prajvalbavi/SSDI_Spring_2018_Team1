@@ -101,17 +101,3 @@ class TestApplicationMethods(TestCase):
         server_response = signup.post_signup_new("prajval1212", "pbavi9292@uncc.edu", "Welcome123")
         self.assertTrue(server_response['message'] == "User added successfully")
         self.assertTrue(server_response['status'] == "success")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
