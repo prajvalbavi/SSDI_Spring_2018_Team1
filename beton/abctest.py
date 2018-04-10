@@ -195,8 +195,7 @@ class TestIsRequestValid(TestCase):
         self.client = Client()
         self.user = Userinfo.objects.create(username="nikhil_test", password="Welcome@2018",
                                             emailID="nikhil_test@gmail.com")
-        self.valid_token_user = jwt.decode({'identifier': self.user.username, 'password': self.user.password})
-        self.valid_token_email = jwt.decode({'identifier': self.user.username, 'password': self.user.password})
+        self.valid_token = jwt.encode({'username': self.user.username}, 'ThisU$erI$LoggedInBetoInfo', algorithm="HS256")
 
     #Missing Authentication token
     def test_missing_auth_request(self):
@@ -219,15 +218,7 @@ class TestIsRequestValid(TestCase):
 
     #has a Valid token
     def test_valid_auth_request(self):
-        self.client.defaults['HTTP_AUTHORIZATION'] = self.valid_token_user
-        response = self.client.post('http://localhost:8000/api/v1/validuser/')
-        pay_load = get_dict_from_response(response)
-        self.assertTrue('isValid' in pay_load.keys())
-        flag = pay_load['isValid']
-        self.assertTrue(flag == True)
-        self.client.defaults = {}
-
-        self.client.defaults['HTTP_AUTHORIZATION'] = self.valid_token_email
+        self.client.defaults['HTTP_AUTHORIZATION'] = self.valid_token
         response = self.client.post('http://localhost:8000/api/v1/validuser/')
         pay_load = get_dict_from_response(response)
         self.assertTrue('isValid' in pay_load.keys())
@@ -242,8 +233,7 @@ class TestValidate(TestCase):
         self.client = Client()
         self.user = Userinfo.objects.create(username="nikhil_test", password="Welcome@2018",
                                             emailID="nikhil_test@gmail.com")
-        self.valid_token_user = jwt.decode({'identifier': self.user.username, 'password': self.user.password})
-        self.valid_token_email = jwt.decode({'identifier': self.user.username, 'password': self.user.password})
+        self.valid_token = jwt.encode({'username': self.user.username}, 'ThisU$erI$LoggedInBetoInfo', algorithm="HS256")
 
 
     def test_is_user_valid_with_missing_token(self):
@@ -263,15 +253,12 @@ class TestValidate(TestCase):
         self.assertTrue(message == 'Invalid User')
 
     def test_is_user_valid_with_valid_token(self):
-        token = self.valid_token_user
+        token = self.valid_token
         flag, message = Validate.is_user_valid(token)
         self.assertTrue(flag == True)
         self.assertTrue(message == 'Valid User')
 
-        token = self.valid_token_email
-        flag, message = Validate.is_user_valid(token)
-        self.assertTrue(flag == True)
-        self.assertTrue(message == 'Valid User')
+
 
 class TestAuthenticate(TestCase):
     def setUp(self):
@@ -279,33 +266,61 @@ class TestAuthenticate(TestCase):
                                             emailID="nikhil_test@gmail.com")
 
     def test_authenticate_user_with_valid_username(self):
-        flag, message = Authenticate.authenticate_user(self.user.username, self.user.password)
+        flag, message, uname = Authenticate.authenticate_user(self.user.username, self.user.password)
         self.assertTrue(flag == True)
         self.assertTrue(message = "User Authenticated")
+        self.assertTrue(uname == self.user.username)
 
     def test_authenticate_user_with_valid_email(self):
-        flag, message = Authenticate.authenticate_user(self.user.emailID, self.user.password)
+        flag, message, uname = Authenticate.authenticate_user(self.user.emailID, self.user.password)
         self.assertTrue(flag == True)
         self.assertTrue(message = "User Authenticated")
+        self.assertTrue(uname == self.user.username)
 
     def test_authenticate_user_with_invalid_username(self):
-        flag, message = Authenticate.authenticate_user("Nikhil567", self.user.password)
+        flag, message, uname = Authenticate.authenticate_user("Nikhil567", self.user.password)
         self.assertTrue(flag == False)
         self.assertTrue(message = "Invalid Credentials")
+        self.assertTrue(uname == '')
 
     def test_authenticate_user_with_invalid_email(self):
-        flag, message = Authenticate.authenticate_user("Nikhil910@gmail.com", self.user.password)
+        flag, message, uname= Authenticate.authenticate_user("Nikhil910@gmail.com", self.user.password)
         self.assertTrue(flag == False)
         self.assertTrue(message = "Invalid Credentials")
+        self.assertTrue(uname == '')
 
     def test_authenticate_user_with_invalid_password(self):
-        flag, message = Authenticate.authenticate_user(self.user.username, "Nikhilabc")
+        flag, message, flag,uname = Authenticate.authenticate_user(self.user.username, "Nikhilabc")
         self.assertTrue(flag == False)
         self.assertTrue(message = "Invalid Credentials")
+        self.assertTrue(uname == '')
 
-        flag, message = Authenticate.authenticate_user(self.user.emailID, "Nikhilabc")
+        flag, message, uname = Authenticate.authenticate_user(self.user.emailID, "Nikhilabc")
         self.assertTrue(flag == False)
         self.assertTrue(message="Invalid Credentials")
+        self.assertTrue(uname == '')
+
+    def test_generate_token_valid_payload(self):
+        pay_load = {"username": self.user.username}
+        token = Authenticate.generate_token(pay_load)
+        self.assertTrue(token is not None and token is not '')
+        pay_load_returned = jwt.decode(token, 'ThisU$erI$LoggedInBetoInfo', algorithm="HS256")
+
+        self.assertTrue(pay_load_returned['username'] == pay_load['username'])
+
+    def test_generate_token_id_valid_username(self):
+        token = Authenticate.generate_token_id(self.user.username)
+        pay_load_returned = jwt.decode(token, 'ThisU$erI$LoggedInBetoInfo', algorithm="HS256")
+
+        self.assertTrue(pay_load_returned['username'] == self.user.username)
+
+    def test_generate_token_id_valid_email(self):
+        token = Authenticate.generate_token_id(self.user.emailID)
+        pay_load_returned = jwt.decode(token, 'ThisU$erI$LoggedInBetoInfo', algorithm="HS256")
+
+        self.assertTrue(pay_load_returned['username'] == self.user.username)
+
+
 
 
 
