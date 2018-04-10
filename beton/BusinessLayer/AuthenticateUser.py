@@ -15,7 +15,7 @@ class Authenticate:
             else: return False, "Invalid Credentials", ''
 
         except ObjectDoesNotExist:
-            return False, "Invalid Credentials", None
+            return False, "Invalid Credentials", ''
         except MultipleObjectsReturned:
             return False, "There is a bug in the system, username and email should not be same.", ''
 
