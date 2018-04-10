@@ -10,6 +10,7 @@ function RemoveToken(event){
         if (token) {
             console.log("signing out, removing token");
             localStorage.removeItem('jwtToken')
+            localStorage.removeItem('username')
         }
 }
 

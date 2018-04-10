@@ -90,9 +90,10 @@ class Signup extends Component{
         console.log();
         if (response.data.status === 'success'){
           that.props.history.push({
-            pathname:"/welcome",
-            state: { detail: response.data.username}});
+            pathname:"/login"
+            /*state: { detail: response.data.username}});*/
             /*state: { detail: "Prajval"}});*/
+          });
         } else {
           if (response.data.message.includes('Username')){
             that.setState(() => {

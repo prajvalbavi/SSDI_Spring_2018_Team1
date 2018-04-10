@@ -12,6 +12,7 @@ import red from "material-ui/es/colors/red";
 
 import setAuthorization from './setAuthorizationToken'
 
+
 const styles = {
     loginContainer: {
        width: '50%',
@@ -74,6 +75,7 @@ class LoginForm extends React.Component {
         console.log("Inside onsubmit", errors, isValid);
         this.setState({ errors: errors, isLoading: isValid });
         if(isValid) {
+
             var bodyFormData = new FormData();
             bodyFormData.set('identifier', this.state.identifier);
             bodyFormData.append('password', this.state.password);
@@ -82,7 +84,7 @@ class LoginForm extends React.Component {
             //     (res) => this.context.router.push('/'),
             //     (err) => this.setState({errors: err.response.data.errors, isLoading: false})
             // );
-
+            let that = this;
             axios({
                 method: 'post',
                 url: 'http://localhost:8000/api/v1/auth/',
@@ -94,6 +96,9 @@ class LoginForm extends React.Component {
                     const token  =  response.data.token;
                     console.log("had_success", token);
                     localStorage.setItem('jwtToken',token);
+                    var jwt = require('jsonwebtoken');
+                    localStorage.setItem('username', jwt.decode(token).username);
+                    console.log(jwt.decode(token).username);
                     setAuthorization(token)
                     this.setState({isLoading: false, createdToken: true});
                     //_response = response

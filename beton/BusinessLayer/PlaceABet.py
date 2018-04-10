@@ -18,7 +18,7 @@ class PlaceABet:
             if(len(bet_info) != 1 and len(bet_info) != 0):
                 return "Error in database, multiple records exists in Betinfo"
             bet_info.update(total_users=bet_info[0]['total_users'] + 1)
-            bet_info.update(total_amount=bet_info[0]['total_amount'] + long(amount))
+            bet_info.update(total_amount=bet_info[0]['total_amount'] + int(amount))
             return "Success"
         except IndexError as e:
             BetInfo.objects.create(topic_id_id = tpcid.topic_id, option = option, total_amount = amount, total_users = 1)

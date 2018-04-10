@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 
 
 const TextFields = ({ field, label, value, error, onChange, type }) => {
-    const has_error = error != undefined && error != '';
+    const has_error = error !== undefined && error !== '';
     return <div className="group">
 
         <TextField

@@ -22,7 +22,7 @@ class Validate:
 
         result, pay_load = Validate.unpack_token(token)
         if result:
-            name = pay_load['identifier']
+            name = pay_load['username']
         else:
             return False, 'Invalid User'
 

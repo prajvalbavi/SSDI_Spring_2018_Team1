@@ -36,7 +36,7 @@ function SimpleAppBar(props) {
       <AppBar position="static" color="default">
         <Toolbar>
           <Typography variant="title" color="inherit">
-            <Link to="/">
+            <Link to="/welcome">
             <img src={mylogo} height="50" width="150"  className={classes.logo}/>
             </Link>
           </Typography>

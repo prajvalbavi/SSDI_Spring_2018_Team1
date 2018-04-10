@@ -84,14 +84,16 @@ class TestApplicationMethods(TestCase):
 
     def test_email_in_team(self):
         signup = SignupAPI()
-        server_response = signup.post_signup_present("prajval1", "pbavi1@uncc.edu", "Welcome123")
-        self.assertTrue(server_response['message'] == "Username already exists")
+        Userinfo.objects.create(username="prajval1", password="Welcome123", emailID="pbavi1@uncc.edu")
+        server_response = signup.post_signup_present("prajval11", "pbavi1@uncc.edu", "Welcome123")
+        self.assertTrue(server_response['message'] == "Email already exists")
         self.assertTrue(server_response['status'] == "error")
 
     def test_user_in_team(self):
         signup = SignupAPI()
-        server_response = signup.post_signup_present("prajval1221", "pbavi962@uncc.edu", "Welcome123")
-        self.assertTrue(server_response['message'] == "Email already exists")
+        Userinfo.objects.create(username="prajval12", password="Welcome123", emailID="pbavi962@uncc.edu")
+        server_response = signup.post_signup_present("prajval12", "pbavi9621@uncc.edu", "Welcome123")
+        self.assertTrue(server_response['message'] == "Username already exists")
         self.assertTrue(server_response['status'] == "error")
 
     def test_new_user(self):
