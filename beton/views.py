@@ -10,13 +10,22 @@ import json
 from beton.BusinessLayer.SignupUser import SignupUser
 from beton.BusinessLayer.GetPublicTopics import BetInformation
 
+from django.core import serializers
+from django.http import HttpResponse
 
 from beton.BusinessLayer.AuthenticateUser import Authenticate
 from beton.BusinessLayer.ValidateUser import Validate
-from rest_framework.authentication import get_authorization_header
 
+from rest_framework.authentication import get_authorization_header
+from rest_framework.decorators import api_view
+
+from beton.BusinessLayer.AuthenticateUser import Authenticate
 from beton.BusinessLayer.GetBetDetails import BetDetails
+from beton.BusinessLayer.GetPublicTopics import BetInformation
 from beton.BusinessLayer.PlaceABet import PlaceABet
+from beton.BusinessLayer.SignupUser import SignupUser
+from beton.BusinessLayer.ValidateUser import Validate
+from beton.models import Userinfo, Topics, BetInfo
 from beton.BusinessLayer.CheckUser import  CheckUser
 from beton.BusinessLayer.UserBetDetails import UserBetDetials
 # Create your views here.
@@ -44,6 +53,7 @@ def get_user(request):
         server_message = CheckUser.get_user(request.POST.get('username'))
         json_server_message = json.dumps(server_message)
         return HttpResponse(json_server_message, content_type="application/json")
+
 
 @api_view(['POST'])
 def post_signup(request):
@@ -143,16 +153,16 @@ def auth_user(request):
     if request.method == 'POST':
 
         post_request = request.POST
-        username = post_request.get('username')
+        identifier = post_request.get('identifier')
         password  = post_request.get('password')
-        print (username)
+        print ('identifier:' , identifier)
         print (password)
-        result, message = Authenticate.authenticate_user(username,password)
+        result, message, uname = Authenticate.authenticate_user(identifier,password)
 
         if result:
             print("is valid user", util_validate_user(request))
-            payload_data = {"username": username}
-            print (payload_data)
+            payload_data = {"username": uname}
+
             token = Authenticate.generate_token(payload_data)
             token = token.decode('utf-8')
             jwt_token = {'token': token}
@@ -163,6 +173,7 @@ def auth_user(request):
             error_message = json.dumps(error_message)
             print (error_message)
             return HttpResponse(error_message, content_type="application/json", status=401)
+
 
 @api_view(['POST'])
 def validate_user(request):
@@ -175,8 +186,6 @@ def validate_user(request):
         status_ = 200 if is_valid_user else 401
         print ('*status*', status_)
         return HttpResponse(json_reply, content_type="application/json", status = status_)
-
-
 
 
 @api_view(['GET'])

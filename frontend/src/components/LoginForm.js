@@ -77,7 +77,7 @@ class LoginForm extends React.Component {
         if(isValid) {
 
             var bodyFormData = new FormData();
-            bodyFormData.set('username', this.state.identifier);
+            bodyFormData.set('identifier', this.state.identifier);
             bodyFormData.append('password', this.state.password);
 
             // axios.post('http://localhost:8000/api/v1/auth/', bodyFormData).then(
