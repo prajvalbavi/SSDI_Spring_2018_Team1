@@ -20,26 +20,7 @@ class Signup extends Component{
   }
 
   componentDidMount(){
-    axios({
-    method: 'post',
-    url: 'http://localhost:8000/api/v1/edituserdetails/',
-    data: bodyFormData,
-    config: { headers: {'Content-Type': 'multipart/form-data' }}
-    })
-    .then(function (response) {
-        console.log(response);
-        if (response.data.status === 'success'){
-          that.setState(() => {
-            return {responseUpdateSuccess: true};
-          })
-          }
-
-        }
-
-    })
-    .catch(function (response) {
-        console.log("Server Error");
-    });
+    
   }
 
   handlePasswordError = (passwordValue) => {

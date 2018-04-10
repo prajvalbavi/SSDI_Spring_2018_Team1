@@ -110,7 +110,7 @@ class SimpleTabs extends React.Component {
                     </AppBar>
                     {value === 0 && this.state.valid_user && <ListDisplay/>}
                     {value === 1 && <TabContainer>Not in Sprint 1</TabContainer>}
-                    {value === 2 &&  && <BetDetails/>}
+                    {value === 2 &&  <BetDetails/>}
                     {value === 3 && <TabContainer>Not in Sprint 1</TabContainer>}
                 </div>
             </div>
