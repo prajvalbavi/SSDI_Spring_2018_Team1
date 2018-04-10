@@ -26,12 +26,8 @@ def util_validate_user(request):
     try:
         auth = get_authorization_header(request)
         auth = auth.decode('utf-8')
-        if "Bearer" in auth:
-            auth = auth.split(" ")[1]
-            print("Bearer in auth, so stripping it", auth)
-        print("Final bearer", auth)
-        is_valid_user = False
-        message = ''
+
+        print(auth)
         if auth:
             is_valid_user, message = Validate.is_user_valid(auth)
             return is_valid_user, message
@@ -128,8 +124,9 @@ def post_user_betdetails(request):
         if is_valid_user:
             status, betlist = UserBetDetials.get_peruser_bets(request.POST.get('username'))
             if len(betlist) > 0:
-                _betdetails = [_b for _b in betlist.values()]
-                print(_betdetails)
+                #_betdetails = [_b for _b in betlist.values()]
+                print(betlist)
+                _betdetails = betlist
             else:
                 _betdetails = []
             server_message = json.dumps({'status': status, 'user_bets_info': _betdetails})

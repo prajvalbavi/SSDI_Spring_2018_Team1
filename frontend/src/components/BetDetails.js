@@ -76,7 +76,7 @@ class SimpleTable extends Component{
               {this.state.bet_info.map(n => {
                 return (
                   <TableRow>
-                    <TableCell>{n.topic_id_id}</TableCell>
+                    <TableCell>{n.topic_name}</TableCell>
                     <TableCell>Option: {n.option}</TableCell>
                     <TableCell>Amount: {n.amount}</TableCell>
                   </TableRow>
