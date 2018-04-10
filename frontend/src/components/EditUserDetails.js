@@ -19,6 +19,29 @@ class Signup extends Component{
     responseUpdateSuccess: undefined,
   }
 
+  componentDidMount(){
+    axios({
+    method: 'post',
+    url: 'http://localhost:8000/api/v1/edituserdetails/',
+    data: bodyFormData,
+    config: { headers: {'Content-Type': 'multipart/form-data' }}
+    })
+    .then(function (response) {
+        console.log(response);
+        if (response.data.status === 'success'){
+          that.setState(() => {
+            return {responseUpdateSuccess: true};
+          })
+          }
+
+        }
+
+    })
+    .catch(function (response) {
+        console.log("Server Error");
+    });
+  }
+
   handlePasswordError = (passwordValue) => {
     var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     return re.test(passwordValue);
@@ -31,6 +54,7 @@ class Signup extends Component{
     return (this.state.emailError && this.state.passwordError
           && this.state.passwordMismatchError)
   }
+
   handleSignUp = (e) => {
     let finalCheck = true;
     e.preventDefault();
