@@ -5,11 +5,9 @@ import validateInput from "./LoginValidator";
 import {grey500, white} from 'material-ui/colors'
 import Paper from 'material-ui/Paper';
 import { withStyles } from 'material-ui/styles';
-import Button from 'material-ui/Button';
 import {Link} from 'react-router-dom';
 import axios from 'axios'
-import red from "material-ui/es/colors/red";
-
+import setAuthorizationToken from "./setAuthorizationToken";
 import setAuthorization from './setAuthorizationToken'
 
 
@@ -41,6 +39,7 @@ const styles = {
         padding: 'auto'
     }
 };
+
 class LoginForm extends React.Component {
 
     constructor(props, context) {
@@ -51,6 +50,8 @@ class LoginForm extends React.Component {
             errors: {identifier: '', password: ''},
             isLoading: false,
             createdToken: false,
+            isLoggedIn: false,
+            testedIfLoggedIn: false,
         };
 
         const token = localStorage.getItem('jwtToken')
@@ -62,6 +63,38 @@ class LoginForm extends React.Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
+    componentDidMount(){
+        if (!this.state.testedIfLoggedIn) {
+            this.PerformValidation()
+        }
+
+    }
+
+
+    PerformValidation() {
+        const token = localStorage.jwtToken;
+        if (!token){
+            this.setState({testedIfLoggedIn: true, isLoggedIn:false})
+        }
+
+        //Authenticate the token
+        setAuthorizationToken(token)
+        let isValidUser = true;
+
+        axios({
+            method: 'post',
+            url: 'http://localhost:8000/api/v1/validuser/',
+            config: { headers: {'Content-Type': 'multipart/form-data' }}
+        }).then(
+            (res) => this.setState({
+
+                isLoggedIn:true, testedIfLoggedIn: true
+            }),
+            (err) => this.setState({
+                    isLoggedIn:false, testedIfLoggedIn: true
+                })
+        )
+    }
 
     onChange(e) {
         this.setState({ [e.target.name]: e.target.value });
@@ -119,15 +152,20 @@ class LoginForm extends React.Component {
 
 
     render() {
-        const { errors, identifier, password, isLoading, createdToken } = this.state;
+        const { errors, identifier, password, isLoading, createdToken, isLoggedIn, testedIfLoggedIn } = this.state;
+        if(isLoggedIn && testedIfLoggedIn){
+            console.log("Already logged in routing to Welcome page")
+            this.context.router.history.push("/welcome")
+        }
         if (createdToken) {
             console.log("redirecting to welcome");
             this.context.router.history.push("/welcome")
         }
         console.log("Inside render", this.state.errors, this.state.isLoading)
         const {classes} = this.props;
+
         return (
-            <div className = {classes.loginContainer}>
+             <div className = {classes.loginContainer}>
                 <Paper className = {classes.paper}>
                     <form onSubmit={this.onSubmit}>
                         <h3>We love to have you back</h3>
