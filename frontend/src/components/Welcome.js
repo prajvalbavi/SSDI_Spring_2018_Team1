@@ -104,15 +104,15 @@ class SimpleTabs extends React.Component {
                     <AppBar position="static">
                         <Tabs value={value} onChange={this.handleChange}>
                             <Tab label="Public" />
-                            <Tab label="Private" />
+
                             <Tab label="My Bets"/>
                             <Tab label="Balance"/>
                         </Tabs>
                     </AppBar>
                     {value === 0 && this.state.valid_user && <ListDisplay/>}
-                    {value === 1 && <TabContainer>Not in Sprint 1</TabContainer>}
-                    {value === 2 &&  <BetDetails/>}
-                    {value === 3 && <TabContainer>Not in Sprint 1</TabContainer>}
+
+                    {value === 1 &&  <BetDetails/>}
+                    {value === 2 && <TabContainer>Not in Sprint 1</TabContainer>}
                 </div>
             </div>
         );
