@@ -13,7 +13,8 @@ class Signup extends Component{
     passwordError: undefined,
     passwordMismatchError: undefined,
     responseUsernameError: undefined,
-    responseEmailError: undefined
+    responseEmailError: undefined,
+    username_email_match: undefined,
   }
 
   handlePasswordError = (passwordValue) => {
@@ -39,6 +40,13 @@ class Signup extends Component{
       return { emailError: !emailError };
 
     });
+
+    if (e.target.username.value.trim().includes('@')){
+      finalCheck = false;
+      this.setState(() => {
+        return { username_email_match: true}
+      })
+    }
 
     if (!this.handlePasswordError(e.target.password.value.trim())){
       finalCheck = false;
@@ -126,7 +134,7 @@ class Signup extends Component{
       <button size="large" className="big-button">Welcome to Beton</button>
       <form onSubmit={this.handleSignUp}>
         <div>
-        {this.state.responseUsernameError ? <TextField required error helperText="User already exists" id="username" label="Username" margin="normal" /> :
+        {this.state.responseUsernameError || this.state.username_email_match ? <TextField required error helperText="User already exists/error" id="username" label="Username" margin="normal" /> :
           <TextField required id="username" label="Username" margin="normal" />}
         </div>
 
