@@ -7,8 +7,8 @@ class BetDetails:
         options = {}
         option_info = Bets.objects.all().filter(topic_id_id=id).values()
         list_of_options = option_info.order_by().values_list('option').distinct()
-        list_of_options = [opt[0] for opt in list_of_options]
+        list_of_options = [opt for opt in list_of_options]
         for opt in list_of_options:
-            topics_info = option_info.filter(option = opt).values()  # opt is a tuple hence opt[0]
+            topics_info = option_info.filter(option = opt).values()
             options[opt] = dict(topics_info.aggregate(Sum('amount')), number_of_users = topics_info.count())
         return options
