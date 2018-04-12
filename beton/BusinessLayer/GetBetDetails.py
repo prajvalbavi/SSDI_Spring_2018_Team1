@@ -9,6 +9,6 @@ class BetDetails:
         list_of_options = option_info.order_by().values_list('option').distinct()
         list_of_options = [opt for opt in list_of_options]
         for opt in list_of_options:
-            topics_info = option_info.filter(option = opt).values()
-            options[opt] = dict(topics_info.aggregate(Sum('amount')), number_of_users = topics_info.count())
+            topics_info = option_info.filter(option = ''.join(opt)).values()
+            options[''.join(opt)] = dict(topics_info.aggregate(Sum('amount')), number_of_users = topics_info.count())
         return options
