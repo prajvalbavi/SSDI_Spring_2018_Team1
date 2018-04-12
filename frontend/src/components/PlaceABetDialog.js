@@ -6,6 +6,7 @@ import Radio, { RadioGroup } from 'material-ui/Radio';
 import { FormLabel, FormControl, FormControlLabel, FormHelperText } from 'material-ui/Form';
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
+import setAuthorizationToken from "./setAuthorizationToken";
 
 
 class SimpleDialog1 extends React.Component {
@@ -13,7 +14,8 @@ class SimpleDialog1 extends React.Component {
     option_info: [],
     value : 'notselected',
     amount : 0,
-    message: undefined
+    message: undefined,
+
     };
    handleChange = event => {
     this.setState({ value: event.target.value });
@@ -26,32 +28,42 @@ class SimpleDialog1 extends React.Component {
      const api1 = 'http://localhost:8000/api/v1/placebet/?topic_id=';
      const tpcid = this.props.topic_id;
      const api2 = '&username=';
-     const username = 'apurva';
+     const username =localStorage.getItem('username');
      const api3 = '&option=';
      const option = this.state.value;
      const api4 = '&amount=';
-     const amount = this.state.amount;
+     const amount = event.target.amount.value;
        axios.get(api1+tpcid+api2+username+api3+option+api4+amount)
        .then(res => {
-           this.setState({ message: res.data });
+               this.setState({ message: res.data });
        })
   };
 
-  optiondetails() {
+  optiondetails = (e) => {
+      const _token = localStorage.getItem('jwtToken')
+      setAuthorizationToken(_token);
       const api = 'http://localhost:8000/api/v1/betdetails/?topic_id=';
-      const tpcid = this.props.topic_id;
+      const tpcid = '1';
       axios.get(api+tpcid)
       .then(res => {
           const topics_info = JSON.parse(JSON.stringify(res.data));
         this.setState({ option_info: topics_info });
       })
   }
+
+    resetstates = (e) => {
+    this.setState({
+    option_info: [],
+    value : 'notselected',
+    amount : 0,
+    message: undefined})
+    };
   render() {
+
     const { value, amount, topic_id, option_info, ...other } = this.props;
-    this.optiondetails();
     return (
-      <Dialog aria-labelledby="simple-dialog-place-a-bet"{...other}>
-        <DialogTitle id="simple-dialog-place-a-bet">Place Bet for {topic_id} by User {topic_id.split(',')[1]}</DialogTitle>
+      <Dialog onEnter = {(e) => this.optiondetails(e)} onExit = {(e) => this.resetstates(e)} aria-labelledby="simple-dialog-place-a-bet"{...other}>
+        <DialogTitle id="simple-dialog-place-a-bet">Please Enter Following Information</DialogTitle>
         <div>
             <form onSubmit={this.handlePlaceABet}>
               <div>
