@@ -39,7 +39,10 @@ class AdminPage extends React.Component {
             >
                 <div>
                     <p> Welcome Admin</p>
-                    <PermanentDrawer/>
+
+                </div>
+                <div>
+                      <PermanentDrawer/>
                 </div>
             </IdleTimer>
         );

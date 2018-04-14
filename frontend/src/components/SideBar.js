@@ -56,30 +56,27 @@ class PermanentDrawer extends React.Component {
         const { anchor } = this.state;
 
         const drawer = (
-            <Drawer
-                variant="permanent"
-                classes={{
-                    paper: classes.drawerPaper,
-                }}
-                anchor={anchor}
-            >
-                <List>
+
+                <div>
+                <List component="nav">
                     <ListItem>
                         <ListItem button>
-                            <ListItemText primary ="Active Bets"/>
+                            <ListItemText primary ="ActiveBets"/>
                         </ListItem>
                         <ListItem button>
-                            <ListItemText primary ="Add Bets"/>
+                            <ListItemText primary ="AddBets"/>
                         </ListItem>
                         <ListItem button>
-                            <ListItemText primary ="Close Bet"/>
+                            <ListItemText primary ="CloseBet"/>
                         </ListItem>
                         <ListItem button>
-                            <ListItemText primary ="Previous Bets"/>
+                            <ListItemText primary ="PreviousBets"/>
                         </ListItem>
                     </ListItem>
                 </List>
-            </Drawer>
+                </div>
+      </div>
+
         );
 
         return (
