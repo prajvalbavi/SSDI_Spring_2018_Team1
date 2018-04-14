@@ -64,6 +64,7 @@ class LoginForm extends React.Component {
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onBlur = this.onBlur.bind(this)
+        this.PerformValidation = this.PerformValidation.bind(this)
     }
 
     componentDidMount() {
@@ -87,7 +88,8 @@ class LoginForm extends React.Component {
         let isValidUser = true;
         var bodyFormData = new FormData();
         bodyFormData.append('is_admin', isAdmin);
-        this.setState({isadministrator: isAdmin})
+        //console.log("setting admin", Boolean(isAdmin), isAdmin, typeof (isAdmin))
+        this.setState({isadministrator: isAdmin == "true"})
 
         axios({
             method: 'post',
@@ -95,10 +97,20 @@ class LoginForm extends React.Component {
             data: bodyFormData,
             config: {headers: {'Content-Type': 'multipart/form-data'}}
         }).then(
-            (res) => this.setState({
+            (res) => {
+                this.setState({
 
-                isLoggedIn: true, testedIfLoggedIn: true
-            }),
+                    isLoggedIn: true, testedIfLoggedIn: true
+                });
+                if (isAdmin == "true") {
+                    console.log("redirecting to admin", isAdmin)
+                    this.context.router.history.push("/admin");
+                }
+                else {
+                    console.log("redirecting to welcome")
+                    this.context.router.history.push("/welcome");
+                }
+            },
             (err) => this.setState({
                 isLoggedIn: false, testedIfLoggedIn: true
             })
@@ -163,27 +175,27 @@ class LoginForm extends React.Component {
         }
     }
 
-    onBlur(e){
+    onBlur(e) {
         console.log("onblur")
-         if ('beton_admin' == e.target.value.toLocaleLowerCase()) {
-             console.log("Is admin", e.target.value)
+        if ('beton_admin' == e.target.value.toLocaleLowerCase()) {
+            console.log("Is admin", e.target.value)
 
-             this.setState({
-                    isadministrator:true
-                })
-            }
-            else {
             this.setState({
-                    isadministrator:false
-                })
-         }
-         }
+                isadministrator: true
+            })
+        }
+        else {
+            this.setState({
+                isadministrator: false
+            })
+        }
+    }
 
     render() {
         const {errors, identifier, password, isLoading, createdToken, isLoggedIn, testedIfLoggedIn, secretKey, isadministrator} = this.state;
         if (isLoggedIn && testedIfLoggedIn || createdToken) {
             console.log("####Admin?", isadministrator)
-            if(isadministrator){
+            if (isadministrator) {
                 this.context.router.history.push("/admin")
             }
             else {
@@ -205,7 +217,7 @@ class LoginForm extends React.Component {
                                 value={identifier}
                                 error={errors.identifier}
                                 onChange={this.onChange}
-                                onblur = {this.onBlur}
+                                onblur={this.onBlur}
                             />
                         </div>
                         <div className="textfields">
@@ -219,7 +231,7 @@ class LoginForm extends React.Component {
                             />
 
                         </div>
-                     {isadministrator && <div className="textfields">
+                        {isadministrator && <div className="textfields">
                             <TextFields
                                 field="secretKey"
                                 label="secret key"
@@ -229,7 +241,7 @@ class LoginForm extends React.Component {
                                 type="password"
                             />
 
-                        </div> }
+                        </div>}
                         <div className="textfields">
                             <button className="button" disabled={isLoading}>
                                 Login
