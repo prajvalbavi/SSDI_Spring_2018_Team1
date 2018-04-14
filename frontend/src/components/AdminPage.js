@@ -1,6 +1,7 @@
 import React from 'react';
 import IdleTimer from 'react-idle-timer';
 import PropTypes from "prop-types";
+import PermanentDrawer from "../components/SideBar"
 
 
 class AdminPage extends React.Component {
@@ -12,7 +13,7 @@ class AdminPage extends React.Component {
         this.onIdle  = this.onIdle.bind(this)
     }
 
-   state = {timeout: 5000, logout: false}
+   state = {timeout: 50000, logout: false}
 
     onIdle() {
         const token = localStorage.getItem('jwtToken')
@@ -38,6 +39,7 @@ class AdminPage extends React.Component {
             >
                 <div>
                     <p> Welcome Admin</p>
+                    <PermanentDrawer/>
                 </div>
             </IdleTimer>
         );
