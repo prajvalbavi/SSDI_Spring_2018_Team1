@@ -55,12 +55,20 @@ class SimpleTabs extends React.Component {
     PerformValidation(){
 
         const token = localStorage.jwtToken;
-        setAuthorizationToken(token)
-        let isValidUser = true;
+        const isAdmin = localStorage.isAdmin
 
+        if(!token || !isAdmin){
+            return
+        }
+
+        setAuthorizationToken(token)
+        var data = new FormData();
+        data.append('is_admin', isAdmin);
+        console.log("checking if user is valid")
         axios({
             method: 'post',
             url: 'http://localhost:8000/api/v1/validuser/',
+            data: data,
             config: { headers: {'Content-Type': 'multipart/form-data' }}
         }).then(
             (res) => this.setState({

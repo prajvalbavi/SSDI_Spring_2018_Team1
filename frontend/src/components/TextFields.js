@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import TextField from 'material-ui/TextField';
 
 
-const TextFields = ({ field, label, value, error, onChange, type }) => {
+const TextFields = ({ field, label, value, error, onChange, type, onblur }) => {
     const has_error = error !== undefined && error !== '';
     return <div className="group">
 
@@ -16,6 +16,7 @@ const TextFields = ({ field, label, value, error, onChange, type }) => {
             placeholder={label}
             error={has_error}
             helperText={error}
+            onBlur={onblur}
 
         />
     </div>;

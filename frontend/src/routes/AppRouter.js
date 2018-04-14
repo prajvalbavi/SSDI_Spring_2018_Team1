@@ -5,6 +5,7 @@ import Footer from '../components/Footer.js'; //Footer
 import Login from "../components/Login.js"; //future for login
 import Welcome from "../components/Welcome.js"; //When user login
 import Signup from "../components/Signup.js"; //Signup page
+import AdminPage from "../components/AdminPage" //Admin page
 import NotFound from "../components/NotFound.js";
 import LandingPage from "../components/LandingPage.js";
 import ListDisplay from "../components/ListDisplay"; //landing page
@@ -18,6 +19,7 @@ const AppRouter = () => (
         <Route path="/" component={LandingPage} exact={true}/>
         <Route path="/login" component={Login}/>
         <Route path="/welcome" component={Welcome}/>
+        <Route path="/admin" component={AdminPage}/>
         <Route path="/signup" component={Signup}/>
         <Route path="/edituserdetails" component={EditUserDetails}/>
         <Route component={NotFound}/>
