@@ -27,6 +27,8 @@ class AddTopics extends React.Component {
                 }
             )
 
+            this.refs.newoptionform.reset();
+
         }
     render() {
         const {options} = this.state
@@ -37,7 +39,7 @@ class AddTopics extends React.Component {
                 <header>
                     <h3>Add topics and its options for betting</h3>
                 </header>
-                <form onSubmit={(e)=>this.addOption(e)}>
+                <form ref="newoptionform" onSubmit={(e)=>this.addOption(e)}>
                     <div className="form-group">
                             <input ref="newoption" placeholder="Add a option" type="text" id="new"/>
 
