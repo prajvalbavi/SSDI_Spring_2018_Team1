@@ -151,18 +151,26 @@ def validate_user(request):
 @api_view(['GET'])
 def get_bet_details(request):
     if request.method == 'GET':
-        b = BetDetails()
-        options = b.get_bet_details(request.GET['topic_id'])
-        json_data = json.dumps(options)
-        return HttpResponse(json_data, content_type="application/json")
+            b = BetDetails()
+            options = b.get_bet_details(request.GET['topic_id'])
+            json_data = json.dumps(options)
+    else:
+            status = "error"
+            json_data = json.dumps({'status':status, 'message': message})
+    return HttpResponse(json_data, content_type="application/json")
 
 
 @api_view(['GET'])
 def place_a_bet(request):
     if request.method == 'GET':
-        p = PlaceABet()
-        response = p.place_a_bet(request.GET['topic_id'], request.GET['username'], request.GET['option'], request.GET['amount'])
-        json_data = json.dumps(response)
+        is_valid_user, message = util_validate_user(request)
+        if is_valid_user:
+            p = PlaceABet()
+            response = p.place_a_bet(request.GET['topic_id'], request.GET['username'], request.GET['option'], request.GET['amount'])
+            json_data = json.dumps(response)
+        else:
+            status = "error"
+            json_data = json.dumps({'status':status, 'message': message})
         return HttpResponse(json_data, content_type="application/json")
 
 
