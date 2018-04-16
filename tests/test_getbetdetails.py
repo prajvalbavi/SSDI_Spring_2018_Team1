@@ -11,8 +11,8 @@ class TestBetDetails(TestCase):
         self.assertEqual(details,dict())
 
     def test_get_bet_details_one_row(self):
-        Userinfo.objects.create(username="testuser1", password="Welcome@2018", emailID="test@gmail.com")
-        user = Userinfo.objects.get(username='testuser1')
+        Userinfo.objects.create(username="testuser7543", password="Welcome@2018", emailID="test@gmail.com")
+        user = Userinfo.objects.get(username='testuser7543')
         Topics.objects.create(topic_name = "xyz", creator_name = user, start_date = "2017-11-21", end_date = "2017-11-21", date_of_creation = "2017-11-21")
         tpcid = Topics.objects.get(topic_name = "xyz")
         Bets.objects.create(topic_id = tpcid, username = user, option = 'A', amount = 140)
@@ -43,28 +43,29 @@ class TestBetDetails(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.user = Userinfo.objects.create(username="testuser1", password="Welcome2018",
-                                            emailID="testuser1@gmail.com")
+        self.user = Userinfo.objects.create(username="testuser1990", password="Welcome2018",
+                                            emailID="testuser1990@gmail.com")
         self.user_dict = {"username": self.user.username}
         self.valid_token = jwt.encode({'username': self.user.username}, 'ThisU$erI$LoggedInBetoInfo',
                                           algorithm="HS256")
 
 
-    def test_place_a_bet_api(self):
-        self.client.defaults['HTTP_AUTHORIZATION'] = self.valid_token
-        response = self.client.post('http://127.0.0.1:8000/api/v1/placebet/?topic_id=3&username=apurva&option=Z&amount=40')
-        self.assertEqual(response.status_code, 200)
-        Bets.objects.filter(topic_id_id=100, username_id='apurva', option='Z', amount=40).delete()
-        BetInfo.objects.filter(topic_id_id=100, option='Z').delete()
-
     def test_get_bet_details_multiple_rows_api(self):
         self.client.defaults['HTTP_AUTHORIZATION'] = self.valid_token
-        response = self.client.post('http://127.0.0.1:8000/api/v1/betdetails/?topic_id=1')
+        self.tpcid = Topics.objects.create(topic_name = "abc", creator_name = self.user, start_date = "2017-11-21", end_date = "2017-11-21", date_of_creation = "2017-11-21")
+        self.tpcid = Topics.objects.get(topic_name = "abc")
+        Bets.objects.create(topic_id = self.tpcid, username = self.user, option = 'A', amount = 100)
+        Bets.objects.create(topic_id = self.tpcid, username = self.user, option = 'A', amount = 15)
+        Bets.objects.create(topic_id = self.tpcid, username = self.user, option = 'B', amount = 200)
+        Bets.objects.create(topic_id = self.tpcid, username = self.user, option = 'B', amount = 15)
+        response = self.client.get('http://127.0.0.1:8000/api/v1/betdetails/?topic_id='+str(self.tpcid.topic_id))
         details = response.json()
-        print (details)git res
-        '''self.assertEqual(len(details), 2)
+        print("******************GET BET DETAILS******************")
+        print(details)
+        print("done")
+        self.assertEqual(len(details), 2)
         self.assertEqual(details.keys(), ['A', 'B'])
         self.assertEqual(details['A']['number_of_users'], 2)
-        self.assertEqual(details['A']['amount__sum'], 211)
+        self.assertEqual(details['A']['amount__sum'], 115)
         self.assertEqual(details['B']['number_of_users'], 2)
-        self.assertEqual(details['B']['amount__sum'], 211)'''
+        self.assertEqual(details['B']['amount__sum'], 215)
