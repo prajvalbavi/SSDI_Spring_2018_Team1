@@ -10,7 +10,6 @@ import SimpleDialog2 from './BetDetailsDialog.js'
 import SimpleDialog1 from './PlaceABetDialog.js'
 import Grid from 'material-ui/Grid';
 import {Link} from 'react-router-dom';
-import setAuthorizationToken from "./setAuthorizationToken";
 const styles = theme => ({
     root: {
         marginTop: theme.spacing.unit * 3,
@@ -46,24 +45,16 @@ class SimpleTable extends Component{
     bet_info: {},
     open1: false,
     open2: false,
-    topic_id : "0",
-    message: undefined,
+    topic_id : "2",
+    message: undefined
   }
-   constructor(props, context){
-        super(props, context)
-    }
     handleClickOpen2 = (e) => {
     this.setState({
     open2: true,
-    topic_id : e.target.id,})
+    topic_id : e.target.id
+    })
   };
     handleClickOpen1 = (e) => {
-        console.log(localStorage.getItem('username'))
-      if(localStorage.getItem('username') == null)
-      {
-          console.log("PlaceABet.js redirecting to login - invalid user ");
-          this.context.router.history.push("/login")
-      }
     this.setState({
     open1: true,
     topic_id : e.target.id,
@@ -76,8 +67,6 @@ class SimpleTable extends Component{
     this.setState({ open2: false });
   };
   componentDidMount() {
-      const _token = localStorage.getItem('jwtToken')
-      setAuthorizationToken(_token);
       axios.get(`http://localhost:8000/api/v1/topicsandinfo/`)
       .then(res => {
         const topics_info = JSON.parse(JSON.stringify(res.data));
@@ -98,7 +87,7 @@ class SimpleTable extends Component{
                         <div>Total Users: {n.total_users}</div>
                         <div>Total Amount: {n.total_amount}</div>
                         </Paper>
-                      <button id = {n.topic_id} onClick = {(e) => this.handleClickOpen1(e)}onClick = {(e) => this.handleClickOpen1(e)}>Place A Bet</button>
+                      <button id = {n.topic_id} onClick = {(e) => this.handleClickOpen1(e)}>Place A Bet</button>
                         <SimpleDialogWrapped1
                           open={this.state.open1}
                           onClose={this.handleClose1}
@@ -119,10 +108,4 @@ class SimpleTable extends Component{
     );
   }
 }
-
-SimpleTable.contextTypes = {
-    router: PropTypes.object
-}
-
-
 export default withStyles(styles)(SimpleTable);
