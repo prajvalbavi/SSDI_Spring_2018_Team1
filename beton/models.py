@@ -8,6 +8,7 @@ class Userinfo(models.Model):
     username = models.CharField(max_length=20, primary_key=True)
     password = models.CharField(max_length=20)
     emailID = models.CharField(max_length=30)
+    balance = models.IntegerField(default=0)
     def __str__(self):
         return self.username
 
@@ -19,6 +20,7 @@ class Topics(models.Model):
     start_date = models.DateField("Date")
     end_date = models.DateField("Date")
     date_of_creation = models.DateField("Date", default=date.today)
+    winning_option = models.CharField(max_length=100, default="not declared")
     def __str__(self):
         return self.topic_name
 
@@ -39,6 +41,8 @@ class Bets(models.Model):
     username = models.ForeignKey(Userinfo, on_delete = models.SET(0))
     option = models.CharField(max_length=20, default = "Null")
     amount = models.IntegerField(default = 0)
+    date_of_placing_bet = models.DateField("Date", default=date.today)
+
     def __str__(self):
         return str(self.username) + ':' + str(self.topic_id) + '-' + str(self.option)
 
@@ -54,3 +58,4 @@ admin.site.register(Userinfo)
 admin.site.register(Topics)
 admin.site.register(BetInfo)
 admin.site.register(Bets)
+admin.site.register(BetOnAdmins)

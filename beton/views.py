@@ -1,5 +1,6 @@
 import json
 
+from django.shortcuts import render, render_to_response
 from django.core import serializers
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
@@ -9,7 +10,10 @@ from beton.BusinessLayer.core.GetPublicTopics import BetInformation
 from beton.BusinessLayer.core.PlaceABet import PlaceABet
 from beton.BusinessLayer.core.SignupUser import SignupUser
 from beton.BusinessLayer.core.UserBetDetails import UserBetDetials
-from beton.models import Topics, BetInfo
+from beton.BusinessLayer.core.DailyBets import DailyBets
+from beton.BusinessLayer.core.DeclareWinner import DeclareWinner
+from beton.BusinessLayer.core.FetchBalance import FetchBalance
+from beton.models import Userinfo, Topics, BetInfo, Bets
 from beton.BusinessLayer.core.utils import Utils
 
 
@@ -109,7 +113,7 @@ def post_user_betdetails(request):
                 _betdetails = betlist
             else:
                 _betdetails = []
-            server_message = json.dumps({'status': status, 'user_bets_info': _betdetails})
+            server_message = json.dumps({'status': status, 'user_bets_info': _betdetails}, default=str)
         else:
             status = "error"
             server_message = json.dumps({'status':status, 'message': message})
@@ -151,18 +155,67 @@ def validate_user(request):
 @api_view(['GET'])
 def get_bet_details(request):
     if request.method == 'GET':
-        b = BetDetails()
-        options = b.get_bet_details(request.GET['topic_id'])
-        json_data = json.dumps(options)
-        return HttpResponse(json_data, content_type="application/json")
+            b = BetDetails()
+            options = b.get_bet_details(request.GET['topic_id'])
+            json_data = json.dumps(options)
+    else:
+            status = "error"
+            json_data = json.dumps({'status':status, 'message': message})
+    return HttpResponse(json_data, content_type="application/json")
 
 
 @api_view(['GET'])
 def place_a_bet(request):
     if request.method == 'GET':
-        p = PlaceABet()
-        response = p.place_a_bet(request.GET['topic_id'], request.GET['username'], request.GET['option'], request.GET['amount'])
-        json_data = json.dumps(response)
+        is_valid_user, message = Utils.validate_user(request)
+        if is_valid_user:
+            p = PlaceABet()
+            response = p.place_a_bet(request.GET['topic_id'], request.GET['username'], request.GET['option'], request.GET['amount'])
+            json_data = json.dumps(response)
+        else:
+            status = "error"
+            json_data = json.dumps({'status':status, 'message': message})
         return HttpResponse(json_data, content_type="application/json")
 
+
+@api_view(['GET'])
+def fetch_balance(request):
+    if request.method == 'GET':
+        is_valid_user, message = Utils.validate_user(request)
+        if is_valid_user:
+            p = FetchBalance()
+            response = p.fetch_balance(request.GET['username'])
+            json_data = json.dumps(response)
+        else:
+            status = "error"
+            json_data = json.dumps({'status':status, 'message': message})
+        return HttpResponse(json_data, content_type="application/json")
+
+
+@api_view(['GET'])
+def dailybets(request):
+    if request.method == 'GET':
+        is_valid_user, message = Utils.validate_user(request)
+        #if is_valid_user:
+        p = DailyBets()
+        response = p.dailybets()
+        json_data = json.dumps(response)
+        #else:
+        #    status = "error"
+        #    json_data = json.dumps({'status':status, 'message': message})
+        return HttpResponse(json_data, content_type="application/json")
+
+
+@api_view(['GET'])
+def declare_winner(request):
+    if request.method == 'GET':
+        is_valid_user, message = Utils.validate_user(request)
+        if is_valid_user:
+            p = DeclareWinner()
+            response = p.declare_winner(request.GET['topic_id'], request.GET['option'])
+            json_data = json.dumps(response)
+        else:
+            status = "error"
+            json_data = json.dumps({'status':status, 'message': message})
+        return HttpResponse(json_data, content_type="application/json")
 

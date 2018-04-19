@@ -2,6 +2,10 @@ from django.test import TestCase
 from beton.BusinessLayer.PlaceABet import PlaceABet as pb
 from beton.models import Userinfo, Topics, BetInfo, Bets
 import requests
+import jwt
+from django.test import Client
+
+
 
 class TestPlaceBet(TestCase):
     def test_get_option_list_blank(self):
@@ -62,28 +66,24 @@ class TestPlaceBet(TestCase):
         response = pb().place_a_bet(87, 'testuser6', 'A', 100)
         self.assertEqual(response, "Invalid topic id/Username")
 
+    def setUp(self):
+        self.client = Client()
+        self.user = Userinfo.objects.create(username="testuser1987", password="Welcome2018",
+                                            emailID="testuser1987@gmail.com")
+        self.user_dict = {"username": self.user.username}
+        self.valid_token = jwt.encode({'username': self.user.username}, 'ThisU$erI$LoggedInBetoInfo',
+                                          algorithm="HS256")
 
-    def test_place_a_bet_invalid_user(self):
-        Userinfo.objects.create(username="testuser8", password="Welcome@2018", emailID="test@gmail.com")
-        user = Userinfo.objects.get(username='testuser8')
-        Topics.objects.create(topic_name="test_topic4", creator_name=user, start_date="2017-11-21",end_date="2017-11-21", date_of_creation="2017-11-21")
-        tpcid = Topics.objects.get(topic_name="test_topic4")
-        response = pb().place_a_bet(87, 'testuser8', 'A', 100)
-        self.assertEqual(response, "Invalid topic id/Username")
-
-
-    def test_place_a_bet_multiple_betinfo(self):
-        Userinfo.objects.create(username="testuser7", password="Welcome@2018", emailID="test@gmail.com")
-        user = Userinfo.objects.get(username='testuser7')
-        Topics.objects.create(topic_name="test_topic3", creator_name=user, start_date="2017-11-21", end_date="2017-11-21", date_of_creation="2017-11-21")
-        tpcid = Topics.objects.get(topic_name="test_topic3")
-        BetInfo.objects.create(topic_id_id=tpcid.topic_id, option= 'A', total_amount=100, total_users=10)
-        BetInfo.objects.create(topic_id_id=tpcid.topic_id, option= 'A', total_amount=100, total_users=10)
-        response = pb().place_a_bet(tpcid.topic_id,'testuser7', 'A', 100)
-        self.assertEqual(response, "Error in database, multiple records exists in Betinfo")
 
     def test_place_a_bet_api(self):
-        response = requests.get('http://127.0.0.1:8000/api/v1/placebet/?topic_id=3&username=apurva&option=Z&amount=40')
+        self.client.defaults['HTTP_AUTHORIZATION'] = self.valid_token
+        self.tpcid = Topics.objects.create(topic_name="abc", creator_name=self.user, start_date="2017-11-21",
+                                           end_date="2017-11-21", date_of_creation="2017-11-21")
+        self.tpcid = Topics.objects.get(topic_name="abc")
+        response = self.client.get('http://127.0.0.1:8000/api/v1/placebet/?topic_id='+str(self.tpcid.topic_id)+'&username=testuser1987&option=Z&amount=40')
+        print("*****************PLACE A BET*******************")
+        print(response)
+        print("done")
         self.assertEqual(response.status_code, 200)
-        Bets.objects.filter(topic_id_id=100, username_id='apurva', option='Z', amount=40).delete()
-        BetInfo.objects.filter(topic_id_id=100, option='Z').delete()
+        Bets.objects.filter(topic_id_id=self.tpcid.topic_id, username_id='apurva', option='Z', amount=40).delete()
+        BetInfo.objects.filter(topic_id_id=self.tpcid.topic_id, option='Z').delete()
