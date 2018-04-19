@@ -39,12 +39,20 @@ class SimpleTabs extends React.Component {
         value: 0,
         valid_user: false,
         validated: false,
+        balance: "",
     };
 
     componentDidMount(){
         if (!this.state.validated) {
             this.PerformValidation()
         }
+        const api = 'http://localhost:8000/api/v1/fetch_balance/?username=';
+        const username =localStorage.getItem('username');
+        axios.get(api+username)
+          .then(res => {
+                   this.setState({ balance: "Balance: "+String(res.data) });
+           })
+
 
     }
 
@@ -114,13 +122,13 @@ class SimpleTabs extends React.Component {
                             <Tab label="Public" />
 
                             <Tab label="My Bets"/>
-                            <Tab label="Balance"/>
+                            <Tab label={this.state.balance}/>
                         </Tabs>
                     </AppBar>
                     {value === 0 && this.state.valid_user && <ListDisplay/>}
 
                     {value === 1 &&  <BetDetails/>}
-                    {value === 2 && <TabContainer>Not in Sprint 1</TabContainer>}
+                    {value === 2 && <TabContainer>Not in Srint 1</TabContainer>}
                 </div>
             </div>
         );

@@ -1,7 +1,6 @@
 import React from 'react';
 import IdleTimer from 'react-idle-timer';
 import PropTypes from "prop-types";
-import PermanentDrawer from "../components/SideBar"
 import AddTopics from "./AddTopics"
 import TextField from 'material-ui/TextField';
 class AdminPage extends React.Component {
