@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.db import models
 from datetime import date
 
+
 # Create your models here.
 class Userinfo(models.Model):
     username = models.CharField(max_length=20, primary_key=True)
@@ -9,6 +10,7 @@ class Userinfo(models.Model):
     emailID = models.CharField(max_length=30)
     def __str__(self):
         return self.username
+
 
 class Topics(models.Model):
     topic_id = models.AutoField(primary_key=True)
@@ -20,6 +22,7 @@ class Topics(models.Model):
     def __str__(self):
         return self.topic_name
 
+
 class BetInfo(models.Model):
     bet_id = models.AutoField(primary_key=True)
     topic_id = models.ForeignKey(Topics, on_delete = models.SET(0))
@@ -29,6 +32,7 @@ class BetInfo(models.Model):
     def __str__(self):
         return str(self.topic_id) + str(self.option)
 
+
 class Bets(models.Model):
     bet_id = models.AutoField(primary_key=True)
     topic_id = models.ForeignKey(Topics, on_delete = models.SET(0))
@@ -37,6 +41,14 @@ class Bets(models.Model):
     amount = models.IntegerField(default = 0)
     def __str__(self):
         return str(self.username) + ':' + str(self.topic_id) + '-' + str(self.option)
+
+
+class BetOnAdmins(models.Model):
+    admin_identity = models.CharField(primary_key= True, max_length= 40)
+    secret_key = models.CharField(max_length=20, null=False)
+    login_time = models.DateTimeField("login", null= True)
+    last_active_time = models.DateTimeField("lastactive", null= True)
+    password = models.CharField(max_length=20)
 
 admin.site.register(Userinfo)
 admin.site.register(Topics)

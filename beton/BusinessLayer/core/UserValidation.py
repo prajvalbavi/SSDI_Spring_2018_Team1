@@ -2,29 +2,29 @@ from beton.models import Userinfo
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 import jwt
+from beton.BusinessLayer.ValidateInterface import  ValidateInterface
+from interface import implements
 
 
 #Checks if this user exists and token is verified.
-class Validate:
+class ValidateUser(implements(ValidateInterface)):
 
-    @staticmethod
-    def unpack_token(token):
+    def unpack(self, token):
         try:
             pay_load = jwt.decode(token, 'ThisU$erI$LoggedInBetoInfo', algorithm="HS256")
             return True, pay_load
         except Exception:
             return False, "Failed to unpack"
 
-    @staticmethod
-    def is_user_valid(token):
+    def get_username(self, token):
         if token is None or token == '':
-            return False, 'Missing Token'
+            return False, None
 
-        result, pay_load = Validate.unpack_token(token)
+        result, pay_load = self.unpack(token)
         if result:
-            name = pay_load['username']
+            return True, pay_load['username']
         else:
-            return False, 'Invalid User'
+            return False, None
 
 
         try:
@@ -35,11 +35,13 @@ class Validate:
         except MultipleObjectsReturned:
             return False, "There is a bug in the system, username and email should not be same."
 
-    @staticmethod
-    def is_token_valid(token):
+    def is_token_valid(self, token):
         try:
+            print ('request to validate user')
             pay_load = jwt.decode(token, 'ThisU$erI$LoggedInBetoInfo', algorithm="HS256")
+            print(pay_load)
             return True, "Signature Verified"
         except jwt.DecodeError as d:
+            print ("Failed to decode token")
             return False, "Signature verification failed"
 
