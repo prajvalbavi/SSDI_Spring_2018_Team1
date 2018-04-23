@@ -130,6 +130,7 @@ def post_makepayment(request):
         print("Validate user")
         is_valid_user, message = Utils.validate_user(request)
         if is_valid_user:
+            username = Utils.extract_username(request)
             server_message = json.dumps({'status':'ok', 'message':'ok'})
         else:
             server_message = json.dumps({'status': 'error', 'message': 'ok'})
