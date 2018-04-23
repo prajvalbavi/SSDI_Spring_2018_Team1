@@ -149,6 +149,20 @@ def post_makepayment(request):
         return HttpResponse(server_message, content_type="application/json")
 
 
+@api_view(['GET'])
+def get_betstats(request):
+    if request.method == 'GET':
+        print("GET hit for get_betstats")
+        print('Validate user')
+        is_valid_user, message = Utils.validate_user(request)
+        if is_valid_user:
+            username = Utils.extract_username(request)
+            server_message = json.dumps({'status': 'success', 'message': 'Valid user'})
+        else:
+            print("Invalid user")
+            server_message = json.dumps({'status': 'error', 'message': 'Invalid user'})
+        return HttpResponse(server_message, content_type="application/json")
+
 @api_view(['POST'])
 def auth_user(request):
     if request.method == 'POST':

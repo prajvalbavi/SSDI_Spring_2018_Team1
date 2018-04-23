@@ -11,6 +11,7 @@ import setAuthorizationToken from "./setAuthorizationToken";
 import axios from "axios/index";
 import BetDetails from '../components/BetDetails.js'
 import Balance from '../components/Balance.js'
+import BetStats from '../components/BetStats.js'
 import {createStore} from 'redux';
 
 function TabContainer(props) {
@@ -134,12 +135,13 @@ class SimpleTabs extends React.Component {
 
                             <Tab label="My Bets"/>
                             <Tab label={this.state.balance}/>
+                            <Tab label="Bet Stats"/>
                         </Tabs>
                     </AppBar>
                     {value === 0 && this.state.valid_user && <ListDisplay/>}
-
                     {value === 1 &&  <BetDetails/>}
-                    {value === 2 && <Balance handlebalance={this.handlebalanceUpdate}/>}
+                    {value === 2 && this.state.valid_user && <Balance handlebalance={this.handlebalanceUpdate}/>}
+                    {value === 3 && this.state.valid_user && <BetStats/>}
                 </div>
             </div>
         );
