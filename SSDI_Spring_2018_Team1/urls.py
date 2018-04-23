@@ -27,7 +27,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.views.generic import TemplateView
 from beton.views import post_signup, get_user, get_topics, get_betinfo, get_bet_topics_and_info, get_bet_details, place_a_bet,auth_user, validate_user
-from beton.views import post_edituserdetails, post_user_betdetails
+from beton.views import post_edituserdetails, post_user_betdetails, post_makepayment
 from beton.views import declare_winner, fetch_balance, dailybets
 
 
@@ -42,6 +42,7 @@ urlpatterns = [
 
     url(r'^api/v1/edituserdetails/', post_edituserdetails, name='post_edituserdetails'),
     url(r'^api/v1/userbetdetails/', post_user_betdetails, name='post_betdetails'),
+    url(r'^api/v1/makepayment/', post_makepayment, name='post_makepayment'),
 
     url(r'^api/v1/auth/', auth_user, name='auth_user'),
     url(r'^api/v1/validuser/', validate_user, name='validate_user'),

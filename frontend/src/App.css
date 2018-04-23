@@ -46,7 +46,19 @@
   margin: 1rem;
 
 }
-
+.button-topup{
+  background: green;
+  border: none;
+  font-size: 1rem;
+  color: white;
+  font-weight: 500;
+  padding: 1rem;
+  width: 12%;
+  margin-top: 2rem;
+  margin-bottom: 2.4rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
 .button-update {
   background: green;
   border: none;

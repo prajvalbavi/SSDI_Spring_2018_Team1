@@ -10,7 +10,7 @@ import HeaderWelcome from '../components/HeaderWelcome.js'
 import setAuthorizationToken from "./setAuthorizationToken";
 import axios from "axios/index";
 import BetDetails from '../components/BetDetails.js'
-
+import Balance from '../components/Balance.js'
 
 function TabContainer(props) {
     return (
@@ -128,7 +128,7 @@ class SimpleTabs extends React.Component {
                     {value === 0 && this.state.valid_user && <ListDisplay/>}
 
                     {value === 1 &&  <BetDetails/>}
-                    {value === 2 && <TabContainer>Not in Srint 1</TabContainer>}
+                    {value === 2 && <Balance/>}
                 </div>
             </div>
         );
