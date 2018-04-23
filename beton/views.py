@@ -15,9 +15,11 @@ from beton.BusinessLayer.core.DeclareWinner import DeclareWinner
 from beton.BusinessLayer.core.FetchBalance import FetchBalance
 from beton.models import Userinfo, Topics, BetInfo, Bets
 from beton.BusinessLayer.core.utils import Utils
+import random
 
 
 # Create your views here.
+EXCHANGE_RATE = 10
 
 #Checks token is valid and if username or email matches with decoded name in token.
 @api_view(['POST'])
@@ -128,12 +130,22 @@ def post_makepayment(request):
     if request.method == 'POST':
         print("POST hit for post_makepayment")
         print("Validate user")
+        topup_amount = int(request.POST.get('amount'))
         is_valid_user, message = Utils.validate_user(request)
         if is_valid_user:
             username = Utils.extract_username(request)
-            server_message = json.dumps({'status':'ok', 'message':'ok'})
+            _prev_balance = FetchBalance().fetch_balance(username)
+            if random.randint(0, 10) != 5:
+            #if 5 != 5:
+                print("Topup success")
+                new_balance = topup_amount * EXCHANGE_RATE + _prev_balance
+                status, message = FetchBalance().topup_balance(username, new_balance)
+            else:
+                print("Topup Failure")
+                status, message = "error", "Payment failure :( Try, try, but never cry :)"
+            server_message = json.dumps({'status': status, 'message':message})
         else:
-            server_message = json.dumps({'status': 'error', 'message': 'ok'})
+            server_message = json.dumps({'status': 'error', 'message': 'Invalid user'})
         return HttpResponse(server_message, content_type="application/json")
 
 

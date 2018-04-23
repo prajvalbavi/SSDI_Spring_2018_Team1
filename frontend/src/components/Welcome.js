@@ -11,6 +11,7 @@ import setAuthorizationToken from "./setAuthorizationToken";
 import axios from "axios/index";
 import BetDetails from '../components/BetDetails.js'
 import Balance from '../components/Balance.js'
+import {createStore} from 'redux';
 
 function TabContainer(props) {
     return (
@@ -42,18 +43,24 @@ class SimpleTabs extends React.Component {
         balance: "",
     };
 
+    handleWelcomeBalanceUpdate = () => {
+      const api = 'http://localhost:8000/api/v1/fetch_balance/?username=';
+      const username =localStorage.getItem('username');
+      axios.get(api+username)
+        .then(res => {
+                 this.setState({ balance: "Balance: "+String(res.data) });
+         })
+    }
+
+    handlebalanceUpdate = () => {
+      console.log("Calling from Balance.js")
+      this.handleWelcomeBalanceUpdate();
+    }
     componentDidMount(){
         if (!this.state.validated) {
             this.PerformValidation()
         }
-        const api = 'http://localhost:8000/api/v1/fetch_balance/?username=';
-        const username =localStorage.getItem('username');
-        axios.get(api+username)
-          .then(res => {
-                   this.setState({ balance: "Balance: "+String(res.data) });
-           })
-
-
+        this.handleWelcomeBalanceUpdate();
     }
 
     handleChange = (event, value) => {
@@ -90,6 +97,9 @@ class SimpleTabs extends React.Component {
 
     }
 
+
+
+
     render() {
         const { classes } = this.props;
         const { value } = this.state;
@@ -99,6 +109,7 @@ class SimpleTabs extends React.Component {
             console.log("routing to login")
             this.context.router.history.push("/login")
         }
+
         //
         // if (!this.state.validated) {
         //     console.log('*Before welcome', 'Validated:', this.state.validated, 'valid_user:' , this.state.valid_user)
@@ -128,7 +139,7 @@ class SimpleTabs extends React.Component {
                     {value === 0 && this.state.valid_user && <ListDisplay/>}
 
                     {value === 1 &&  <BetDetails/>}
-                    {value === 2 && <Balance/>}
+                    {value === 2 && <Balance handlebalance={this.handlebalanceUpdate}/>}
                 </div>
             </div>
         );

@@ -6,8 +6,12 @@ import setAuthorization from './setAuthorizationToken';
 
 
 class MakePayment extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   state = {
     amountStateError: undefined,
+    paymentStatus: undefined,
   }
   handleAmountError = (amountValue) => {
     var re = /^\d+$/;
@@ -36,16 +40,22 @@ class MakePayment extends React.Component {
       config: { headers: {'Content-Type': 'multipart/form-data' }}
       })
       .then(function (response) {
-        console.log(response)
+        console.log(response.message)
         console.log("Success in payment")
+        var responseMessage = JSON.parse(JSON.stringify(response.data));
+        that.props.makepayment(responseMessage.message);
       })
       .catch(function (response) {
-        console.log(response)
+        console.log(response.message)
         console.log("Server Error");
+        var responseMessage = JSON.parse(JSON.stringify(response.data));
+        that.props.makepayment(responseMessage.message);
       });
     } else {
       this.setState(() => {
-        return {amountStateError: true};
+        return {
+          amountStateError: true
+        };
       });
       console.log("Wrong amount value");
     }
