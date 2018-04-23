@@ -13,6 +13,7 @@ from beton.BusinessLayer.core.UserBetDetails import UserBetDetials
 from beton.BusinessLayer.core.DailyBets import DailyBets
 from beton.BusinessLayer.core.DeclareWinner import DeclareWinner
 from beton.BusinessLayer.core.FetchBalance import FetchBalance
+from beton.BusinessLayer.core.BetStats import BetStats
 from beton.models import Userinfo, Topics, BetInfo, Bets
 from beton.BusinessLayer.core.utils import Utils
 import random
@@ -157,7 +158,8 @@ def get_betstats(request):
         is_valid_user, message = Utils.validate_user(request)
         if is_valid_user:
             username = Utils.extract_username(request)
-            server_message = json.dumps({'status': 'success', 'message': 'Valid user'})
+            stats = BetStats.get_peruser_betStats(username)
+            server_message = json.dumps({'status': 'success', 'stats': json.dumps(stats)})
         else:
             print("Invalid user")
             server_message = json.dumps({'status': 'error', 'message': 'Invalid user'})
