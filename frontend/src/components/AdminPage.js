@@ -1,5 +1,5 @@
 import React from 'react';
-import IdleTimer from 'react-idle-timer';
+// import IdleTimer from 'react-idle-timer';
 import PropTypes from "prop-types";
 import AddTopics from "./AddTopics"
 import TextField from 'material-ui/TextField';
@@ -32,10 +32,7 @@ class AdminPage extends React.Component {
     render() {
 
         return (
-            <IdleTimer
-                idleAction={this.onIdle}
-                timeout={this.state.timeout}
-            >
+            <div>
                 <div>
                     <p> Welcome Admin</p>
 
@@ -43,7 +40,7 @@ class AdminPage extends React.Component {
                 <div>
                       <AddTopics/>
                 </div>
-            </IdleTimer>
+            </div>
         );
     }
 }

@@ -17,8 +17,10 @@ from beton.BusinessLayer.core.BetStats import BetStats
 from beton.BusinessLayer.core.AdminGetTopics import AdminGetTopics
 from beton.models import Userinfo, Topics, BetInfo, Bets
 from beton.BusinessLayer.core.utils import Utils
+from beton.BusinessLayer.core.AddBet import AddBet
 import random
 import datetime
+
 
 
 # Create your views here.
@@ -270,4 +272,24 @@ def declare_winner(request):
             status = "error"
             json_data = json.dumps({'status':status, 'message': message})
         return HttpResponse(json_data, content_type="application/json")
+
+
+@api_view(['POST'])
+def add_a_bet(request):
+    if request.method == 'POST':
+        status, message = Utils.validate_user(request)
+
+        if status:
+
+            all_options = request.POST.get('options')
+            topic_name = request.POST.get('topicName')
+            creation_date = request.POST.get('creationDate')
+            start_date = request.POST.get('startDate')
+            end_date = request.POST.get('endDate')
+
+            status, message = AddBet().add_a_bet(topic_name, all_options, start_date, end_date, creation_date)
+
+
+        json_data = json.dumps({'status': status, 'message': message})
+        return HttpResponse(json_data, content_type="application/json", status = 200 if status else 401)
 
