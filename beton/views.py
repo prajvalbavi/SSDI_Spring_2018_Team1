@@ -13,11 +13,16 @@ from beton.BusinessLayer.core.UserBetDetails import UserBetDetials
 from beton.BusinessLayer.core.DailyBets import DailyBets
 from beton.BusinessLayer.core.DeclareWinner import DeclareWinner
 from beton.BusinessLayer.core.FetchBalance import FetchBalance
+from beton.BusinessLayer.core.BetStats import BetStats
+from beton.BusinessLayer.core.AdminGetTopics import AdminGetTopics
 from beton.models import Userinfo, Topics, BetInfo, Bets
 from beton.BusinessLayer.core.utils import Utils
+import random
+import datetime
 
 
 # Create your views here.
+EXCHANGE_RATE = 10
 
 #Checks token is valid and if username or email matches with decoded name in token.
 @api_view(['POST'])
@@ -128,12 +133,50 @@ def post_makepayment(request):
     if request.method == 'POST':
         print("POST hit for post_makepayment")
         print("Validate user")
+        topup_amount = int(request.POST.get('amount'))
         is_valid_user, message = Utils.validate_user(request)
         if is_valid_user:
-            server_message = json.dumps({'status':'ok', 'message':'ok'})
+            username = Utils.extract_username(request)
+            _prev_balance = FetchBalance().fetch_balance(username)
+            if random.randint(0, 10) != 5:
+            #if 5 != 5:
+                print("Topup success")
+                new_balance = topup_amount * EXCHANGE_RATE + _prev_balance
+                status, message = FetchBalance().topup_balance(username, new_balance)
+            else:
+                print("Topup Failure")
+                status, message = "error", "Payment failure :( Try, try, but never cry :)"
+            server_message = json.dumps({'status': status, 'message':message})
         else:
-            server_message = json.dumps({'status': 'error', 'message': 'ok'})
+            server_message = json.dumps({'status': 'error', 'message': 'Invalid user'})
         return HttpResponse(server_message, content_type="application/json")
+
+
+@api_view(['GET'])
+def get_betstats(request):
+    if request.method == 'GET':
+        print("GET hit for get_betstats")
+        print('Validate user')
+        is_valid_user, message = Utils.validate_user(request)
+        if is_valid_user:
+            username = Utils.extract_username(request)
+            stats = BetStats.get_peruser_betStats(username)
+            server_message = json.dumps({'status': 'success', 'stats': json.dumps(stats)})
+        else:
+            print("Invalid user")
+            server_message = json.dumps({'status': 'error', 'message': 'Invalid user'})
+        return HttpResponse(server_message, content_type="application/json")
+
+@api_view(['GET'])
+def get_admincreatedtopics(request):
+    if request.method == 'GET':
+        print('get_admincreatedtopics GET hit, for Admin')
+        status, _list = AdminGetTopics.get_topics(datetime.date.today())
+        if status == "success":
+            server_message = json.dumps({'status': status, 'topics': _list})
+        else:
+            server_message = json.dumps({'status': status, 'message': 'Excpetion in getting topics'})
+    return HttpResponse(server_message, content_type="application/json")
 
 
 @api_view(['POST'])
