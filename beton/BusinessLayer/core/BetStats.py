@@ -1,10 +1,13 @@
-from beton.models import Bets
+from beton.models import Bets, ClosedBets
 from beton.models import Userinfo
+from django.db.models import Sum
 
 
 class BetStats:
     def __init__(self, username):
         self.username = username
+        self.WIN = 1
+        self.LOSE = 0
 
     def pack_stats(self):
         _temp_stats = {}
@@ -18,7 +21,7 @@ class BetStats:
 
     def get_totalbets(self):
         # Use a new table and filter it on something relevant
-        closedBets = len(Bets.objects.filter(username=self.username))
+        closedBets = len(ClosedBets.objects.filter(username=self.username))
         total_bets = self.get_activebets() + closedBets
         return total_bets
 
@@ -28,23 +31,19 @@ class BetStats:
         return activeBets
 
     def get_numberOfWins(self):
-        # Use a new table and filter it on something relevant
-        numberOfWins = len(Bets.objects.filter(username=self.username))
+        numberOfWins = len(ClosedBets.objects.filter(username=self.username, win=self.WIN))
         return numberOfWins
 
     def get_totalWinAmount(self):
-        # Use a new table and filter it on something relevant
-        totalWinAmount = len(Bets.objects.filter(username=self.username))
+        totalWinAmount = ClosedBets.objects.filter(username=self.username, win=self.WIN).aggregate(Sum('amount'))
         return totalWinAmount
 
     def get_numberOfLoss(self):
-        # Use a new table and filter it on something relevant
-        numberOfLoss = len(Bets.objects.filter(username=self.username))
+        numberOfLoss = len(ClosedBets.objects.filter(username=self.username, win=self.LOSE))
         return numberOfLoss
 
     def get_totalLossAmount(self):
-        # Use a new table and filter it on something relevant
-        totalLossAmount = len(Bets.objects.filter(username=self.username))
+        totalLossAmount = ClosedBets.objects.filter(username=self.username, win=self.LOSE).aggregate(Sum('amount'))
         return totalLossAmount
 
     def get_peruser_betStats(self):
