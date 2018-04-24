@@ -10,6 +10,7 @@ import NotFound from "../components/NotFound.js";
 import LandingPage from "../components/LandingPage.js";
 import ListDisplay from "../components/ListDisplay"; //landing page
 import EditUserDetails from "../components/EditUserDetails.js" //EditUserDetails
+import AdminLandingPage from "../components/AdminLandingPage.js" //Admin Landing Page
 
 
 const AppRouter = () => (
@@ -19,9 +20,10 @@ const AppRouter = () => (
         <Route path="/" component={LandingPage} exact={true}/>
         <Route path="/login" component={Login}/>
         <Route path="/welcome" component={Welcome}/>
-        <Route path="/admin" component={AdminPage}/>
+        <Route path="/admin" component={AdminLandingPage}/>
         <Route path="/signup" component={Signup}/>
         <Route path="/edituserdetails" component={EditUserDetails}/>
+        <Route path="/tmpadmin" component={AdminLandingPage}/>
         <Route component={NotFound}/>
       </Switch>
       <Footer/>

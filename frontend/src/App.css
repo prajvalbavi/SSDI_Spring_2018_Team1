@@ -59,18 +59,45 @@
   margin-left: 2rem;
   margin-right: 2rem;
 }
-.button-update {
-  background: green;
+
+
+.button-stats{
   border: none;
+  border-radius: 15px;
   font-size: 1rem;
   color: white;
   font-weight: 500;
   padding: 1rem;
-  width: 12%;
-  margin-top: 2rem;
-  margin-bottom: 2.4rem;
-
+  width: 15%;
+  margin-top: 0.2rem;
+  margin-bottom: 0.1rem;
+  margin-right: 2rem;
+  disabled: true;
 }
+
+.totalBets{
+  background: orange;
+}
+.activeBets{
+  background: grey;
+}
+
+.wins {
+  background: green;
+}
+
+.loss {
+  background: #ff8b4c;
+}
+
+.totalwin {
+  background: blue;
+}
+
+.totalLost {
+  background: #668fff;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
