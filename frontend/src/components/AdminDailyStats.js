@@ -7,6 +7,8 @@ import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import Button from 'material-ui/Button';
 import CreatedTopics from '../components/CreatedTopics.js';
+import BetsMade from '../components/BetsMade.js';
+
 
 const styles = theme => ({
   button: {
@@ -64,7 +66,7 @@ class ControlledOpenSelect extends React.Component {
           </Select>
           <div>
             {this.state.optionSelected === 2 ? <CreatedTopics/> : ""}
-            {this.state.optionSelected === 3 ? <div>Selected Bets Made</div> : ""}
+            {this.state.optionSelected === 3 ? <BetsMade/> : ""}
             {this.state.optionSelected === 4 ? <div>Selected Something else</div> : ""}
           </div>
         </div>

@@ -14,13 +14,6 @@ class DailyBets:
         #import pdb
         #pdb.set_trace()
         for topic in list_of_topics:
-            option_info = Bets.objects.all().filter(topic_id_id=topic).values()
-            list_of_options = option_info.order_by().values_list('option').distinct()
-            list_of_options = [opt for opt in list_of_options]
-            options = {}
-            for opt in list_of_options:
-                topics_info = option_info.filter(option=''.join(opt)).values()
-                options[''.join(opt)] = dict(topics_info.aggregate(Sum('amount')), number_of_users=topics_info.count())
-            topics[str(topic)] = dict(option=options)
-
+            topic_name = Topics.objects.filter(topic_id = topic).values('topic_name')
+            topics[str(topic)] = topic_name[0]['topic_name']
         return topics
