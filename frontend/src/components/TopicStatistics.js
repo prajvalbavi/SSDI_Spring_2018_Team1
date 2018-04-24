@@ -6,22 +6,21 @@ import {Link} from 'react-router-dom';
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
 import setAuthorizationToken from "./setAuthorizationToken";
 
-class SimpleDialog1 extends React.Component {
+class SimpleDialog4 extends React.Component {
     state = {
     option_info: [],
     };
 
   optiondetails = (e) => {
+      const _token = localStorage.getItem('jwtToken')
+      setAuthorizationToken(_token);
       const api = 'http://localhost:8000/api/v1/betdetails/?topic_id=';
       const tpcid = this.props.topic_id;
-      console.log(tpcid)
       axios.get(api+tpcid)
       .then(res => {
         const topics_info = JSON.parse(JSON.stringify(res.data));
         this.setState({ option_info: topics_info });
-
       })
-      console.log(this.state.option_info)
   }
     resetstates = (e) => {
     this.setState({
@@ -33,8 +32,8 @@ class SimpleDialog1 extends React.Component {
   render() {
     const { topic_id, option_info, ...other } = this.props;
     return (
-      <Dialog onEnter = {(e) => this.optiondetails(e)} onExit = {(e) => this.resetstates(e)} aria-labelledby="simple-dialog-get-bet-details" {...other}>
-        <DialogTitle id="simple-dialog-get-bet-details">Bet Details</DialogTitle>
+      <Dialog onEnter = {(e) => this.optiondetails(e)} onExit = {(e) => this.resetstates(e)} aria-labelledby="simple-dialog-topic-stats" {...other}>
+        <DialogTitle id="simple-dialog-simple-dialog-topic-stats">Topic Statistics</DialogTitle>
         <div>
             <Table>
             <TableHead>
@@ -60,9 +59,9 @@ class SimpleDialog1 extends React.Component {
     );
   }
 }
-SimpleDialog1.propTypes = {
+SimpleDialog4.propTypes = {
   topic_id: PropTypes.string,
   option_info: PropTypes.array
 };
 
-export default (SimpleDialog1);
+export default (SimpleDialog4);
