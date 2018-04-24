@@ -160,7 +160,8 @@ def get_betstats(request):
         is_valid_user, message = Utils.validate_user(request)
         if is_valid_user:
             username = Utils.extract_username(request)
-            stats = BetStats.get_peruser_betStats(username)
+            bstats = BetStats(username)
+            stats = bstats.get_peruser_betStats()
             server_message = json.dumps({'status': 'success', 'stats': json.dumps(stats)})
         else:
             print("Invalid user")

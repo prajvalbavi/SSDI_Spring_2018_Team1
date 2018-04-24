@@ -63,7 +63,7 @@ class Balance extends React.Component {
         <div>
 
           Current Balance: {this.state.currentBalance}
-          <button onClick={this.handleTopup} className="button-topup">Topup Account</button>
+          <button onClick={this.handleTopup} className="button-update">Topup Account</button>
         </div>
         <div>
         {this.state.showTopup ? <MakePayment makepayment={this.handleupdatePayment}/> : ""}
