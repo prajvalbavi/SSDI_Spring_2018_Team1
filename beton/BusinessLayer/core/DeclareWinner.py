@@ -26,11 +26,16 @@ class DeclareWinner:
         for i in range(len(bets)):
             ClosedBets.objects.create(bet_id = bets[i]['bet_id'], topic_id = bets[i]['topic_id_id'], username = bets[i]['username_id'], option = bets[i]['option'], amount = bets[i]['amount'], date_of_placing_bet = bets[i]['date_of_placing_bet'], win = 0, win_lose_amount = 0)
             bet = ClosedBets.objects.filter(bet_id = bets[i]['bet_id']).values()
+            user = Userinfo.objects.filter(username=bet[0]['username']).values()
             if(bet[0]['option'] == topictoclose[0]['winning_option']):
                 bet.update(win = 1)
                 amount_won_lost = (float(bet[0]['amount'])/float(topictoclose[0]['winning_amount'])) * losing_amount
+                user.update(balance=user[0]['balance'] + amount_won_lost)
             else:
                 amount_won_lost = bet[0]['amount']
+                user.update(balance=user[0]['balance'] - amount_won_lost)
             bet.update(win_lose_amount = amount_won_lost)
-
+        Bets.objects.filter(topic_id=id).delete()
+        BetInfo.objects.filter(topic_id=id).delete()
+        Topics.objects.filter(topic_id=id).delete()
         return "Declared winner"
