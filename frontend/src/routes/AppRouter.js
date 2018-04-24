@@ -20,7 +20,7 @@ const AppRouter = () => (
         <Route path="/" component={LandingPage} exact={true}/>
         <Route path="/login" component={Login}/>
         <Route path="/welcome" component={Welcome}/>
-        <Route path="/admin" component={AdminPage}/>
+        <Route path="/admin" component={AdminLandingPage}/>
         <Route path="/signup" component={Signup}/>
         <Route path="/edituserdetails" component={EditUserDetails}/>
         <Route path="/tmpadmin" component={AdminLandingPage}/>

@@ -8,6 +8,10 @@ import HeaderSignup from '../components/HeaderSignup.js'
 import setAuthorizationToken from "./setAuthorizationToken";
 import axios from "axios/index";
 import AdminDailyStats from "../components/AdminDailyStats.js";
+import AdminPage from "./AdminPage";
+import SimpleTable from "./AdminWelcome"
+import HeaderWelcome from '../components/HeaderWelcome.js'
+
 
 function TabContainer(props) {
     return (
@@ -50,7 +54,7 @@ class SimpleTabs extends React.Component {
         return (
 
             <div>
-                <HeaderSignup/>
+                <HeaderWelcome username={localStorage.getItem('username')}/>
                 <div className={classes.root}>
                     <AppBar position="static">
                         <Tabs value={value} onChange={this.handleChange}>
@@ -59,8 +63,8 @@ class SimpleTabs extends React.Component {
                             <Tab label="Daily Stats"/>
                         </Tabs>
                     </AppBar>
-                    {value === 0 && <div>Tab 1</div>}
-                    {value === 1 &&  <div>Tab 2</div>}
+                    {value === 0 && <SimpleTable/>}
+                    {value === 1 &&  <AdminPage/>}
                     {value === 2 && <AdminDailyStats/>}
                 </div>
             </div>
