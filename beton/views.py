@@ -14,9 +14,11 @@ from beton.BusinessLayer.core.DailyBets import DailyBets
 from beton.BusinessLayer.core.DeclareWinner import DeclareWinner
 from beton.BusinessLayer.core.FetchBalance import FetchBalance
 from beton.BusinessLayer.core.BetStats import BetStats
+from beton.BusinessLayer.core.AdminGetTopics import AdminGetTopics
 from beton.models import Userinfo, Topics, BetInfo, Bets
 from beton.BusinessLayer.core.utils import Utils
 import random
+import datetime
 
 
 # Create your views here.
@@ -164,6 +166,18 @@ def get_betstats(request):
             print("Invalid user")
             server_message = json.dumps({'status': 'error', 'message': 'Invalid user'})
         return HttpResponse(server_message, content_type="application/json")
+
+@api_view(['GET'])
+def get_admincreatedtopics(request):
+    if request.method == 'GET':
+        print('get_admincreatedtopics GET hit, for Admin')
+        status, _list = AdminGetTopics.get_topics(datetime.date.today())
+        if status == "success":
+            server_message = json.dumps({'status': status, 'topics': _list})
+        else:
+            server_message = json.dumps({'status': status, 'message': 'Excpetion in getting topics'})
+    return HttpResponse(server_message, content_type="application/json")
+
 
 @api_view(['POST'])
 def auth_user(request):
