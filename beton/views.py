@@ -252,14 +252,9 @@ def fetch_balance(request):
 @api_view(['GET'])
 def dailybets(request):
     if request.method == 'GET':
-        is_valid_user, message = Utils.validate_user(request)
-        #if is_valid_user:
         p = DailyBets()
         response = p.dailybets()
         json_data = json.dumps(response)
-        #else:
-        #    status = "error"
-        #    json_data = json.dumps({'status':status, 'message': message})
         return HttpResponse(json_data, content_type="application/json")
 
 

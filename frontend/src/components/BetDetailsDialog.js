@@ -12,15 +12,16 @@ class SimpleDialog1 extends React.Component {
     };
 
   optiondetails = (e) => {
-      const _token = localStorage.getItem('jwtToken')
-      setAuthorizationToken(_token);
       const api = 'http://localhost:8000/api/v1/betdetails/?topic_id=';
       const tpcid = this.props.topic_id;
+      console.log(tpcid)
       axios.get(api+tpcid)
       .then(res => {
         const topics_info = JSON.parse(JSON.stringify(res.data));
         this.setState({ option_info: topics_info });
+
       })
+      console.log(this.state.option_info)
   }
     resetstates = (e) => {
     this.setState({
@@ -33,7 +34,7 @@ class SimpleDialog1 extends React.Component {
     const { topic_id, option_info, ...other } = this.props;
     return (
       <Dialog onEnter = {(e) => this.optiondetails(e)} onExit = {(e) => this.resetstates(e)} aria-labelledby="simple-dialog-get-bet-details" {...other}>
-        <DialogTitle id="simple-dialog-get-bet-details">Topic Details</DialogTitle>
+        <DialogTitle id="simple-dialog-get-bet-details">Bet Details</DialogTitle>
         <div>
             <Table>
             <TableHead>
