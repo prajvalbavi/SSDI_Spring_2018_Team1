@@ -114,13 +114,15 @@ def post_user_betdetails(request):
         is_valid_user, message = Utils.validate_user(request)
         if is_valid_user:
             status, betlist = UserBetDetials.get_peruser_bets(request.POST.get('username'))
-            if len(betlist) > 0:
-                #_betdetails = [_b for _b in betlist.values()]
-                print(betlist)
-                _betdetails = betlist
-            else:
+            if status == "error":
                 _betdetails = []
-            server_message = json.dumps({'status': status, 'user_bets_info': _betdetails}, default=str)
+            else:
+                if len(betlist) > 0:
+                    print(betlist)
+                    _betdetails = betlist
+                else:
+                    _betdetails = []
+            server_message = json.dumps({'status': "success", 'user_bets_info': _betdetails}, default=str)
         else:
             status = "error"
             server_message = json.dumps({'status':status, 'message': message})

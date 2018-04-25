@@ -1,7 +1,7 @@
 from django.test import TestCase
-from beton.BusinessLayer.GetBetDetails import BetDetails as bd
-from beton.BusinessLayer.PlaceABet import PlaceABet as pb
-from beton.BusinessLayer.UserBetDetails import UserBetDetials
+from beton.BusinessLayer.core.GetBetDetails import BetDetails as bd
+from beton.BusinessLayer.core.PlaceABet import PlaceABet as pb
+from beton.BusinessLayer.core.UserBetDetails import UserBetDetials
 from beton.models import Userinfo, Topics, BetInfo, Bets
 import requests
 import jwt

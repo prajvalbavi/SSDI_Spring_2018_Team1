@@ -1,7 +1,7 @@
 from django.test import TestCase
-from beton.BusinessLayer.CheckUser import CheckUser
+from beton.BusinessLayer.core.CheckUser import CheckUser
 from beton.views import post_edituserdetails
-from beton.BusinessLayer.UserBetDetails import UserBetDetials
+from beton.BusinessLayer.core.UserBetDetails import UserBetDetials
 from beton.models import Userinfo, Topics, BetInfo, Bets
 import requests
 import jwt
