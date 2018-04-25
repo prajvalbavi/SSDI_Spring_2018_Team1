@@ -11,6 +11,7 @@ import AdminDailyStats from "../components/AdminDailyStats.js";
 import AdminPage from "./AdminPage";
 import SimpleTable from "./AdminWelcome"
 import HeaderWelcome from '../components/HeaderWelcome.js'
+import teal from 'material-ui/colors/teal'
 
 
 function TabContainer(props) {
@@ -30,6 +31,9 @@ const styles = theme => ({
         marginTop: theme.spacing.unit,
         backgroundColor: theme.palette.background.paper,
     },
+    appBar: {
+        backgroundColor: "#00897B"
+    }
 });
 
 class SimpleTabs extends React.Component {
@@ -56,7 +60,7 @@ class SimpleTabs extends React.Component {
             <div>
                 <HeaderWelcome username={localStorage.getItem('username')}/>
                 <div className={classes.root}>
-                    <AppBar position="static">
+                    <AppBar position="static" className={classes.appBar}>
                         <Tabs value={value} onChange={this.handleChange}>
                             <Tab label="All Topics" />
                             <Tab label="Create Topic"/>
