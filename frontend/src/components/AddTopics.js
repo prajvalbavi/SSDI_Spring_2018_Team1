@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
 import {Link} from 'react-router-dom';
 import {DatePicker} from 'material-ui-pickers'
@@ -9,9 +9,9 @@ import axios from 'axios';
 import PropTypes from "prop-types";
 
 
-class AddTopics extends React.Component {
-    constructor(props, context) {
-        super(props, context)
+class AddTopics extends Component {
+   constructor(props, context){
+        super(props, context);
         this.state = {
             topic: '',
             options: [],
@@ -19,18 +19,20 @@ class AddTopics extends React.Component {
             today: '',
             startDate: '',
             endDate: '',
-        }
+        };
 
         this.addOption = this.addOption.bind(this);
-        this.onBlur = this.onBlur.bind(this)
-        this.saveBet = this.saveBet.bind(this)
-        this.addStartDate = this.addStartDate.bind(this)
+        this.onBlur = this.onBlur.bind(this);
+        this.saveBet = this.saveBet.bind(this);
+        this.addStartDate = this.addStartDate.bind(this);
         this.addEndDate = this.addEndDate.bind(this)
+        this.checkIfValidAdmin = this.checkIfValidAdmin.bind(this)
     }
 
     componentDidMount(){
-        var d = new Date(Date.now())
-        d.setHours(0,0,0,0)
+        this.checkIfValidAdmin();
+        var d = new Date(Date.now());
+        d.setHours(0,0,0,0);
            this.setState({
                today: d,
             startDate: d,
@@ -38,14 +40,24 @@ class AddTopics extends React.Component {
         })
     }
 
+    checkIfValidAdmin(){
+        const token = localStorage.jwtToken;
+        const isAdmin = localStorage.isAdmin;
+        if (token === null || isAdmin === null || isAdmin === "false") {
+            console.log("Addtopic redirecting to login - invalid user");
+            this.context.router.history.push("/login")
+        }
+
+    }
+
     addOption(e) {
-        e.preventDefault()
-        const {options} = this.state
+        e.preventDefault();
+        const {options} = this.state;
         const newoption = this.refs.newoption.value;
-        console.log("Newoption", newoption)
-        var regex = new RegExp(options.join("|", "i"))
-        const isAlreadyAdded = options.length != 0 && regex.test(newoption)
-        console.log(isAlreadyAdded)
+        console.log("Newoption", newoption);
+        var regex = new RegExp(options.join("|", "i"));
+        const isAlreadyAdded = options.length != 0 && regex.test(newoption);
+        console.log(isAlreadyAdded);
         if (isAlreadyAdded) {
             this.setState({
                 message: 'This option is already added'
@@ -68,7 +80,7 @@ class AddTopics extends React.Component {
     removeOption(item) {
         const newoptions = this.state.options.filter(option => {
             return option !== item;
-        })
+        });
 
         this.setState({
             options: [...newoptions]
@@ -76,7 +88,7 @@ class AddTopics extends React.Component {
     }
 
     onBlur(e) {
-        console.log(e.target.value)
+        console.log(e.target.value);
         this.setState({
             topic: e.target.value
         })
@@ -85,9 +97,9 @@ class AddTopics extends React.Component {
     addStartDate = (date) => {
         this.setState({
             startDate: date
-        })
+        });
 
-        console.log("date is" , Date(date))
+        console.log("date is" , Date(date));
         if (this.state.endDate < date) {
               this.setState({
             endDate: date
@@ -97,29 +109,34 @@ class AddTopics extends React.Component {
             console.log("Not small", this.state.startDate, this.state.endDate)
         }
 
-    }
+    };
 
     addEndDate = (date) => {
         this.setState({
             endDate: date
         })
 
-    }
+    };
 
     saveBet(e) {
         const token = localStorage.jwtToken;
-        const isAdmin = localStorage.isAdmin
-        if (token === null || isAdmin === null || !isAdmin) {
-            this.context.router.history.push("/login")
+        const isAdmin = localStorage.isAdmin;
+        if (token === null || isAdmin === null || isAdmin === "false") {
+            console.log("Addtopic redirecting to login - invalid user");
+            this.context.router.history.push("/login");
+            this.setState({
+                message: "Invalid Credentials"
+            })
         }
-        setAuthorizationToken(token)
+        else{
+            setAuthorizationToken(token);
         var bodyFormData = new FormData();
-        bodyFormData.append('is_admin', isAdmin);
-        bodyFormData.append('topicName', this.state.topic)
-        bodyFormData.append('options', this.state.options)
-        bodyFormData.append('creationDate', this.state.today.getTime())
-        bodyFormData.append('startDate', this.state.startDate.getTime())
-        bodyFormData.append('endDate', this.state.endDate.getTime())
+        bodyFormData.append('is_admin', "true");
+        bodyFormData.append('topicName', this.state.topic);
+        bodyFormData.append('options', this.state.options);
+        bodyFormData.append('creationDate', this.state.today.getTime());
+        bodyFormData.append('startDate', this.state.startDate.getTime());
+        bodyFormData.append('endDate', this.state.endDate.getTime());
 
 
         axios({
@@ -135,16 +152,18 @@ class AddTopics extends React.Component {
                 });
             },
             (err) => this.setState({
-                message: "Failed to save bet"
+                message: err.response.data.message
             })
         )
+        }
+
 
     }
 
     render() {
-        const {topic, options, message, startDate, endDate, today} = this.state
-        console.log("dates: ", today, startDate, endDate)
-        console.log("Topic", topic, "options" , options)
+        const {topic, options, message, startDate, endDate, today} = this.state;
+        console.log("dates: ", today, startDate, endDate);
+        console.log("Topic", topic, "options" , options);
 
 
         return (
@@ -224,6 +243,6 @@ class AddTopics extends React.Component {
 
 AddTopics.contextTypes = {
     router: PropTypes.object.isRequired
-}
+};
 
 export default AddTopics
