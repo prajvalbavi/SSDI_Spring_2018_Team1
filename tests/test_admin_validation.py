@@ -20,7 +20,7 @@ class TestAdminValidation(TestCase):
         flag = pay_load['isValid']
         self.assertTrue(flag == False)
 
-    #has a Invalid token
+    # has a Invalid token
     def test_validate_admin_invalid_token(self):
         self.client.defaults['HTTP_AUTHORIZATION'] = "Nikhil.Invalid.User.TryingtoHack"
         response = self.client.post('http://localhost:8000/api/v1/validuser/', data={"is_admin": "true"})
@@ -31,7 +31,7 @@ class TestAdminValidation(TestCase):
         self.client.defaults = {}
 
 
-    #has a Valid token
+    # has a Valid token
     def test_valid_auth_request(self):
         self.client.defaults['HTTP_AUTHORIZATION'] = self.valid_token
         response = self.client.post('http://localhost:8000/api/v1/validuser/', data={"is_admin": "true"})
