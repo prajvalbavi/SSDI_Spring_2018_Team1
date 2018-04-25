@@ -12,7 +12,7 @@ class DeclareWinner:
             return "You already Declared "+str(topic[0]['winning_option'])+" as winning option"
         topic.update(winning_option= option)
 
-        ClosedTopics.objects.create(topic_id = topic[0]['topic_id'],topic_name = topic[0]['topic_name'], creator_name = topic[0]['creator_name_id'], start_date = topic[0]['start_date'], end_date = topic[0]['end_date'],date_of_creation = topic[0]['date_of_creation'],winning_option = topic[0]['winning_option'])
+        ClosedTopics.objects.create(topic_id = topic[0]['topic_id'],topic_name = topic[0]['topic_name'], creator_name = topic[0]['creator_name'], start_date = topic[0]['start_date'], end_date = topic[0]['end_date'],date_of_creation = topic[0]['date_of_creation'],winning_option = topic[0]['winning_option'])
         bets = Bets.objects.filter(topic_id= id).values()
         total_amount = bets.aggregate(Sum('amount'))
         topictoclose = ClosedTopics.objects.filter(topic_id= id).values()

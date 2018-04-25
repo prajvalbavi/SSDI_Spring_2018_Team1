@@ -18,6 +18,7 @@ from beton.BusinessLayer.core.AdminGetTopics import AdminGetTopics
 from beton.models import Userinfo, Topics, BetInfo, Bets
 from beton.BusinessLayer.core.utils import Utils
 from beton.BusinessLayer.core.AddBet import AddBet
+from beton.BusinessLayer.core.Options import Options
 import random
 import datetime
 
@@ -259,18 +260,21 @@ def dailybets(request):
         json_data = json.dumps(response)
         return HttpResponse(json_data, content_type="application/json")
 
+@api_view(['GET'])
+def options(request):
+    if request.method == 'GET':
+        p = Options()
+        response = p.options(request.GET['topic_id'])
+        json_data = json.dumps(response)
+        return HttpResponse(json_data, content_type="application/json")
+
 
 @api_view(['GET'])
 def declare_winner(request):
     if request.method == 'GET':
-        is_valid_user, message = Utils.validate_user(request)
-        if is_valid_user:
-            p = DeclareWinner()
-            response = p.declare_winner(request.GET['topic_id'], request.GET['option'])
-            json_data = json.dumps(response)
-        else:
-            status = "error"
-            json_data = json.dumps({'status':status, 'message': message})
+        p = DeclareWinner()
+        response = p.declare_winner(request.GET['topic_id'], request.GET['option'])
+        json_data = json.dumps(response)
         return HttpResponse(json_data, content_type="application/json")
 
 
