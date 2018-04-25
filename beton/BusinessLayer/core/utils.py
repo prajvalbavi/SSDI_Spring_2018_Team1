@@ -67,6 +67,14 @@ class Utils:
                 return UserAuthorization().generate_token(user)
 
 
+    @staticmethod
+    def extract_username(request):
+        _auth = ValidationData(request).get_header()
+        _check, username = ValidateUser().get_username(_auth)
+        if _check:
+            return username
+
+
 
 
 

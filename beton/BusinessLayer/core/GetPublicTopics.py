@@ -44,3 +44,4 @@ class BetInformation:
                 self._add_options(topic_info=bet_topics_info[option_info['topic_id_id']], option_info=option_info)
 
         return bet_topics_info
+
