@@ -42,7 +42,7 @@ class SimpleDialog1 extends React.Component {
   optiondetails = (e) => {
       const _token = localStorage.getItem('jwtToken')
       setAuthorizationToken(_token);
-      const api = 'http://localhost:8000/api/v1/betdetails/?topic_id=';
+      const api = 'http://localhost:8000/api/v1/options/?topic_id=';
       const tpcid = this.props.topic_id;
       axios.get(api+tpcid)
       .then(res => {
