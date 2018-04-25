@@ -264,7 +264,5 @@ LoginForm.contextTypes = {
     router: PropTypes.object.isRequired
 }
 
-LoginForm.propTypes = {
-    loginaction: PropTypes.func.isRequired
-}
+
 export default withStyles(styles)(LoginForm);

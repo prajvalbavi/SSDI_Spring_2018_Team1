@@ -16,7 +16,7 @@ class Userinfo(models.Model):
 class Topics(models.Model):
     topic_id = models.AutoField(primary_key=True)
     topic_name = models.CharField(max_length=100)
-    creator_name = models.ForeignKey(Userinfo, on_delete = models.SET(0))
+    creator_name = models.CharField(max_length=100)
     start_date = models.DateField("Date")
     end_date = models.DateField("Date")
     date_of_creation = models.DateField("Date", default=date.today)
@@ -50,8 +50,6 @@ class Bets(models.Model):
 class BetOnAdmins(models.Model):
     admin_identity = models.CharField(primary_key= True, max_length= 40)
     secret_key = models.CharField(max_length=20, null=False)
-    login_time = models.DateTimeField("login", null= True)
-    last_active_time = models.DateTimeField("lastactive", null= True)
     password = models.CharField(max_length=20)
 
 class ClosedBets(models.Model):

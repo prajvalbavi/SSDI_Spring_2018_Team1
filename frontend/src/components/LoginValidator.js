@@ -14,6 +14,11 @@ export default function validateInput(data) {
         isValid = false;
     }
 
+    if(data.isadministrator && data.secretKey == ''){
+        errors.secretKey = "Secret key is required";
+        isValid = false;
+    }
+
     return {
         errors,
         isValid

@@ -20,9 +20,11 @@ class AdminAuthorization(implements(AuthInterface)):
             admins.objects.get(Q(admin_identity=identifier.lower())
                                & Q(password=password) & Q(secret_key=secret_key))
             return True, "Admin authenticated", identifier
-        except ObjectDoesNotExist:
+        except ObjectDoesNotExist as o:
+            print(str(o))
             return False, "Invalid credentials", ''
-        except MultipleObjectsReturned:
+        except MultipleObjectsReturned as m:
+            print(str(m))
             return False, "There is a bug in the system, unique result expected for an admin.", ''
 
     def generate_token(self, username):
