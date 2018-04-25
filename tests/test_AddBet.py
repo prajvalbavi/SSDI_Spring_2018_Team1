@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from beton.models import Topics
 from beton.models import BetInfo
 
-class TestAddBest(TestCase):
+class TestAddBet(TestCase):
     def setUp(self):
         self.topic_name = "test topic"
         self.option_list = ['a', 'b']
