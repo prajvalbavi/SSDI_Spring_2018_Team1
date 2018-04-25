@@ -20,7 +20,7 @@ class BetInformation:
         return date.strftime('%m/%d/%Y')
 
     def _get_topic_attributes(self, topic_info):
-        return dict(topic_id=topic_info['topic_id'], topic_name=topic_info['topic_name'], creator_name=topic_info['creator_name_id'],start_date=self._str_date(topic_info['start_date']),
+        return dict(topic_id=topic_info['topic_id'], topic_name=topic_info['topic_name'], creator_name=topic_info['creator_name'],start_date=self._str_date(topic_info['start_date']),
                     end_date=self._str_date(topic_info['end_date']),
                     date_of_creation=self._str_date(topic_info['date_of_creation']))
 
