@@ -12,7 +12,6 @@ import axios from "axios/index";
 import BetDetails from '../components/BetDetails.js'
 import Balance from '../components/Balance.js'
 import BetStats from '../components/BetStats.js'
-import {createStore} from 'redux';
 
 function TabContainer(props) {
     return (
@@ -73,8 +72,8 @@ class SimpleTabs extends React.Component {
         const token = localStorage.jwtToken;
         const isAdmin = localStorage.isAdmin
 
-        if(!token || !isAdmin){
-            return
+        if(isAdmin !== null && isAdmin == "true" && token !== null){
+            this.context.router.history.push("/login")
         }
 
         setAuthorizationToken(token)
