@@ -144,7 +144,6 @@ def post_makepayment(request):
             username = Utils.extract_username(request)
             _prev_balance = FetchBalance().fetch_balance(username)
             if random.randint(0, 10) != 5:
-            #if 5 != 5:
                 print("Topup success")
                 new_balance = topup_amount * EXCHANGE_RATE + _prev_balance
                 status, message = FetchBalance().topup_balance(username, new_balance)

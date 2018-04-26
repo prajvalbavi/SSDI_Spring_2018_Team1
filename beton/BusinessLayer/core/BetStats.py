@@ -36,7 +36,10 @@ class BetStats:
 
     def get_totalWinAmount(self):
         totalWinAmount = ClosedBets.objects.filter(username=self.username, win=self.WIN).aggregate(Sum('amount'))
-        return totalWinAmount
+        if totalWinAmount['amount__sum'] == None:
+            return 0
+        else:
+            return totalWinAmount['amount__sum']
 
     def get_numberOfLoss(self):
         numberOfLoss = len(ClosedBets.objects.filter(username=self.username, win=self.LOSE))
@@ -44,7 +47,10 @@ class BetStats:
 
     def get_totalLossAmount(self):
         totalLossAmount = ClosedBets.objects.filter(username=self.username, win=self.LOSE).aggregate(Sum('amount'))
-        return totalLossAmount
+        if totalLossAmount['amount__sum'] == None:
+            return 0
+        else:
+            return totalLossAmount['amount__sum']
 
     def get_peruser_betStats(self):
         _temp_stats = self.pack_stats()
