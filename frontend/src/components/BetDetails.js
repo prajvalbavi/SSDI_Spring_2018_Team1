@@ -79,6 +79,7 @@ class SimpleTable extends Component{
                     <TableCell>{n.topic_name}</TableCell>
                     <TableCell>Option: {n.option}</TableCell>
                     <TableCell>Amount: {n.amount}</TableCell>
+                    <TableCell>Bet Status: {n.status}</TableCell>
                   </TableRow>
                 );
               })}
