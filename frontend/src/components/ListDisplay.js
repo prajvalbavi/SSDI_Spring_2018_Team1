@@ -98,14 +98,14 @@ class SimpleTable extends Component{
                         <div>Total Users: {n.total_users}</div>
                         <div>Total Amount: {n.total_amount}</div>
                         </Paper>
-                      <button id = {n.topic_id} onClick = {(e) => this.handleClickOpen1(e)}onClick = {(e) => this.handleClickOpen1(e)}>Place A Bet</button>
+                      <button className="button-list placeBets" id = {n.topic_id} onClick = {(e) => this.handleClickOpen1(e)}onClick = {(e) => this.handleClickOpen1(e)}>Place A Bet</button>
                         <SimpleDialogWrapped1
                           open={this.state.open1}
                           onClose={this.handleClose1}
                           topic_id={this.state.topic_id}
                           option_info={[]}
                         />
-                      <button id = {n.topic_id} onClick = {(e) => this.handleClickOpen2(e)}>Bet Details</button>
+                      <button className="button-list betDetails" id = {n.topic_id} onClick = {(e) => this.handleClickOpen2(e)}>Bet Details</button>
                          <SimpleDialogWrapped2
                           open={this.state.open2}
                           onClose={this.handleClose2}
