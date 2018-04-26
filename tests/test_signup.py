@@ -1,6 +1,6 @@
 from django.test import TestCase
-from beton.BusinessLayer.SignupUser import SignupUser as su
-from beton.BusinessLayer.GetPublicTopics import BetInformation
+from beton.BusinessLayer.core.SignupUser import SignupUser as su
+from beton.BusinessLayer.core.GetPublicTopics import BetInformation
 from beton.models import Userinfo, Topics, BetInfo
 from django.test import Client
 from beton.BusinessLayer.ValidateUser import Validate

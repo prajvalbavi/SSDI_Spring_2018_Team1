@@ -115,13 +115,15 @@ def post_user_betdetails(request):
         is_valid_user, message = Utils.validate_user(request)
         if is_valid_user:
             status, betlist = UserBetDetials.get_peruser_bets(request.POST.get('username'))
-            if len(betlist) > 0:
-                #_betdetails = [_b for _b in betlist.values()]
-                print(betlist)
-                _betdetails = betlist
-            else:
+            if status == "error":
                 _betdetails = []
-            server_message = json.dumps({'status': status, 'user_bets_info': _betdetails}, default=str)
+            else:
+                if len(betlist) > 0:
+                    print(betlist)
+                    _betdetails = betlist
+                else:
+                    _betdetails = []
+            server_message = json.dumps({'status': "success", 'user_bets_info': _betdetails}, default=str)
         else:
             status = "error"
             server_message = json.dumps({'status':status, 'message': message})
@@ -142,7 +144,6 @@ def post_makepayment(request):
             username = Utils.extract_username(request)
             _prev_balance = FetchBalance().fetch_balance(username)
             if random.randint(0, 10) != 5:
-            #if 5 != 5:
                 print("Topup success")
                 new_balance = topup_amount * EXCHANGE_RATE + _prev_balance
                 status, message = FetchBalance().topup_balance(username, new_balance)
@@ -163,7 +164,8 @@ def get_betstats(request):
         is_valid_user, message = Utils.validate_user(request)
         if is_valid_user:
             username = Utils.extract_username(request)
-            stats = BetStats.get_peruser_betStats(username)
+            bstats = BetStats(username)
+            stats = bstats.get_peruser_betStats()
             server_message = json.dumps({'status': 'success', 'stats': json.dumps(stats)})
         else:
             print("Invalid user")

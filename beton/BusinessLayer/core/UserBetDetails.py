@@ -7,7 +7,7 @@ class UserBetDetials:
     def get_peruser_bets(username):
         print("Username in UserBetDetails", username)
         try:
-            _bets = Bets.objects.filter(username=username)
+            _bets = Bets.objects.filter(username_id=username)
             if len(_bets) == 0:
                 return "success", ""
             else:
