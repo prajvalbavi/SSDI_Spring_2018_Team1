@@ -59,7 +59,28 @@
   margin-left: 2rem;
   margin-right: 2rem;
 }
+.button-list{
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  color: white;
+  font-weight: 200;
+  padding: 0.5rem;
+  width: 35%;
+  text-align: center;
+  margin-top: .2rem;
+  margin-bottom: 2rem;
+  margin-left: .2rem;
+  margin-right: .2rem;
+}
 
+.placeBets {
+  background: #1A9816;
+}
+
+.betDetails {
+  background: #D33D1C;
+}
 
 .button-stats{
   border: none;
