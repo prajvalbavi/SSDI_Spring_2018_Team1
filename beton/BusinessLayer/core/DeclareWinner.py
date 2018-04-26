@@ -29,7 +29,7 @@ class DeclareWinner:
             user = Userinfo.objects.filter(username=bet[0]['username']).values()
             if(bet[0]['option'] == topictoclose[0]['winning_option']):
                 bet.update(win = 1)
-                amount_won_lost = (float(bet[0]['amount'])/float(topictoclose[0]['winning_amount'])) * losing_amount
+                amount_won_lost = bet[0]['amount']+ ((float(bet[0]['amount'])/float(topictoclose[0]['winning_amount'])) * losing_amount)
                 user.update(balance=user[0]['balance'] + amount_won_lost)
             else:
                 amount_won_lost = bet[0]['amount']
