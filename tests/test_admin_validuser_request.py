@@ -3,8 +3,9 @@ from django.test import Client
 from django.test import TestCase
 from beton.models import BetOnAdmins as admins
 from tests.utils import *
+from unittest.mock import patch
 
-class TestAdminValidation(TestCase):
+class TestAdminValidationRequest(TestCase):
     def setUp(self):
         self.client = Client()
         self.admin = admins.objects.create(admin_identity="test_admin", password="test_password",
@@ -40,3 +41,15 @@ class TestAdminValidation(TestCase):
         flag = pay_load['isValid']
         self.assertTrue(flag == True)
         self.client.defaults = {}
+
+    def side_effect_success(self, key, default):  # Helps in faking request object with all data present.
+        print("side effect key", key, "default:", default)
+
+        if key == "identifier":
+            return self.admin_identity
+        if key == "password":
+            return self.password
+        if key == "secret_key":
+            return self.secret_key
+        if key == "is_admin":
+            return "true"
